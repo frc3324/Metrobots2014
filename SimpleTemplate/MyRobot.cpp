@@ -15,7 +15,8 @@ private:
         int step;
         Timer *timer, *freshness;
         
-        Talon *flMotor, *blMotor, *frMotor, *brMotor;
+        Talon *flMotor;
+		Victor *frMotor;
         DualRelay *loaderRelay;
         DualRelay *netRelay;
         DigitalInput *netLimit;
@@ -31,9 +32,7 @@ private:
         virtual void RobotInit() {
                 
                 flMotor = new Talon( 1 );
-                blMotor = new Talon( 2 );
-                frMotor = new Talon( 3 );
-                brMotor = new Talon( 4 );
+                frMotor = new Victor( 3 );
                 
                 timer = new Timer();
                 freshness = new Timer();
