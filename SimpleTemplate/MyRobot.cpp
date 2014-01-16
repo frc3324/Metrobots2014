@@ -4,7 +4,6 @@
 #include "util/metropidcontroller.h"
 #include "util/dualrelay.h"
 #include "drive.h"
-#include "shooter.h"
 #include <stdio.h>
 #include <Math.h>
 
@@ -17,18 +16,14 @@ private:
         Timer *timer, *freshness;
         
         Talon *flMotor, *blMotor, *frMotor, *brMotor;
-        Victor *shooterMotor;
         DualRelay *loaderRelay;
         DualRelay *netRelay;
         DigitalInput *netLimit;
-        Counter *shooterCounter;
         Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder; 
         Gyro *gyro;
         GamePad *driverGamePad;
-        GamePad *shooterGamePad;
         
         Drive *drive;
-        Shooter *shooter;
         
         DriverStationLCD *ds;
         //NetworkTable *table;
@@ -56,13 +51,11 @@ private:
                 gyro->Reset();
 
                 driverGamePad = new GamePad( 1 );
-                shooterGamePad = new GamePad( 2 );
                 
                 
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
 
-                shooter = new Shooter( shooterMotor, loaderRelay, shooterCounter );
                 
                 ds = DriverStationLCD::GetInstance();
 
@@ -160,30 +153,6 @@ private:
                  * LB: Hold to run Reverse
                  */
 
-                
-                /*
-                 * Shooter Setpoint with Speed Control
-                 * A: Press to enable
-                 */
-                
-                /*
-                 * Stop Shooter
-                 * B: Press to Stop Shooter
-                 */
-                
-                /*
-                 * Shooter Setpoint with Straight Voltage
-                 * X: Press to enable
-                 */
-                if( shooterGamePad->GetButtonDown( GamePad::X ) ){
-                        shooter->SetPID( false );
-                        shooter->SetShooterSpeed( Shooter::SETPOINT_VOLTAGE );
-                }
-                
-                /*
-                 * Shoot when Spun Up
-                 * Y: Hold to Shoot when spun up
-                 */
 				 
                 
                 Actuate();
@@ -200,15 +169,7 @@ private:
         virtual void DisabledPeriodic() {
                 
                 UpdateOI();
-                
-                
-                if( shooterGamePad->GetButtonDown( GamePad::B ) ){
-                        script = NoScript;
-                }
-                
-                if( shooterGamePad->GetButtonDown( GamePad::X ) ){
-                        script = BangBangScript;
-                }
+
                                 
                 PrintToDS();
                 
@@ -217,21 +178,18 @@ private:
         void Actuate(){
                 
                 drive->Actuate();
-                shooter->Actuate();
                 
         }
         
         void Disable(){
                 
                 drive->Disable();
-                shooter->Disable();
                 
         }
         
         void UpdateOI(){
 
                 driverGamePad->Update();
-                shooterGamePad->Update();
                 IsFreshTarget();
                 
         }
@@ -243,8 +201,6 @@ private:
                 ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s%f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->GetGyroAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
                 ds->Printf(DriverStationLCD::kUser_Line4, 1, "" );
-                ds->Printf(DriverStationLCD::kUser_Line5, 1, "Sh: %sSET: %f", shooter->IsPID() ? "P, " : "", shooter->GetSetpoint() );
-                ds->Printf(DriverStationLCD::kUser_Line6, 1, "Sh REAL: %f", shooter->GetActualSpeed() );
                 ds->UpdateLCD();
                 
         }
