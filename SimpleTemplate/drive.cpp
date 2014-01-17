@@ -73,66 +73,12 @@ void Drive::Actuate(){
 	double y = driverY;
 	double turn = driverTurn;
 
-	if( isFieldOriented ){
-	
-		double gAngle = GetGyroAngle();
-		double cosA = cos( gAngle * 3.14159 / 180 );
-		double sinA = sin( gAngle * 3.14159 / 180 );
-	
-    	x = driverX*cosA - driverY*sinA;
-    	y = driverX*sinA + driverY*cosA;
-	
-	}
-	
-	if( isHoldAngle ){
-	
-		double gyroAngle = fmod( GetGyroAngle(), 360.0 );
-		double relativeAngle = gyroAngle - targetAngle;
-		
-		if( relativeAngle > 180 ){
-		
-			relativeAngle = -( 180 - ( relativeAngle - 180 ) );
-		
-		}
-	
-		turn = Drive::ANGLE_P * relativeAngle;
-	
-	}
-
 	double fl = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double bl = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double fr = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double bl = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fr = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 	double br = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 
-	if( isPIDControl ){
-	
-		flPID->SetSetpoint( fl, fl );
-		blPID->SetSetpoint( bl, bl );
-		frPID->SetSetpoint( fr, fr );
-		brPID->SetSetpoint( br, br );
 
-		xPID->SetSetpoint( x );
-		yPID->SetSetpoint( y );
-		turnPID->SetSetpoint( turn );
-	
-		fl = flPID->GetOutput();
-		bl = blPID->GetOutput();
-		fr = frPID->GetOutput();
-		br = brPID->GetOutput();
-
-		//fl = xPID->GetOutput() + yPID->GetOutput() + turnPID->GetOutput() ;
-		//bl = -xPID->GetOutput() + yPID->GetOutput() + turnPID->GetOutput() ;
-		//fr = -xPID->GetOutput() + yPID->GetOutput() - turnPID->GetOutput() ;
-		//br = xPID->GetOutput() + yPID->GetOutput() - turnPID->GetOutput() ;
-	
-	}
-	
-	flMotor->Set( fl * motorInverters[0] );
-	blMotor->Set( bl * motorInverters[1] );
-	frMotor->Set( fr * motorInverters[2] );
-	brMotor->Set( br * motorInverters[3] );
-
-}
 
 void Drive::Disable(){
 
