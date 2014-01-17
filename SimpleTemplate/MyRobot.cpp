@@ -41,18 +41,13 @@ private:
                 netRelay = new DualRelay( 3, 4 );
                 netLimit = new DigitalInput( 2 );
                 
-                flEncoder = new Encoder( 9, 10 );
-                blEncoder = new Encoder( 11, 12 );
-                frEncoder = new Encoder( 5, 6 );
-                brEncoder = new Encoder( 7, 8 );
-                
                 gyro = new Gyro( 1 );
                 gyro->Reset();
 
                 driverGamePad = new GamePad( 1 );
                 
                 
-                drive = new Drive( flMotor, frMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
+                drive = new Drive( flMotor, frMotor, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
 
                 
