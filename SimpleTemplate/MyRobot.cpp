@@ -52,7 +52,7 @@ private:
                 driverGamePad = new GamePad( 1 );
                 
                 
-                drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
+                drive = new Drive( flMotor, frMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
 
                 
