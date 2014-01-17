@@ -15,7 +15,7 @@ private:
         int step;
         Timer *timer, *freshness;
         
-        Talon *flMotor, *blMotor;
+        Jaguar *flMotor, *blMotor;
 		Victor *frMotor, *brMotor;
         DualRelay *loaderRelay;
         DualRelay *netRelay;
