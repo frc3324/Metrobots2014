@@ -70,7 +70,7 @@ void Drive::Actuate(){
 	turnPID->SetSource( flVel - brVel + blVel - frVel );
 	
 	double x = driverX;
-	double y = driverX;
+	double y = driverY;
 	double turn = driverTurn;
 
 	if( isFieldOriented ){
@@ -99,10 +99,10 @@ void Drive::Actuate(){
 	
 	}
 
-	double fl = ( x ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double bl = ( x ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double fr = ( x ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double br = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fl = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double bl = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fr = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double br = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 
 	if( isPIDControl ){
 	
