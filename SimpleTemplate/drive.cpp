@@ -101,8 +101,8 @@ void Drive::Actuate(){
 
 	double fl = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 	double bl = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double fr = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double br = ( y ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fr = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double br = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 
 	if( isPIDControl ){
 	
@@ -154,13 +154,6 @@ void Drive::SetMecanumXYTurn( double x, double y, double turn ){
 
 }
 
-void Drive::SetMecanumRLStrafe( double r, double l, double strafe ){
-
-	driverX = strafe;
-	driverY = ( r + l ) / 2;
-	driverTurn = ( l - r ) / 2;
-
-}
 
 void Drive::SetFieldOriented( bool value ){
 
