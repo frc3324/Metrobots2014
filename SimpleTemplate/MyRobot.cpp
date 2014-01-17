@@ -15,8 +15,8 @@ private:
         int step;
         Timer *timer, *freshness;
         
-        Talon *flMotor;
-		Victor *frMotor;
+        Talon *flMotor, *blMotor;
+		Victor *frMotor, *brMotor;
         DualRelay *loaderRelay;
         DualRelay *netRelay;
         DigitalInput *netLimit;
@@ -32,7 +32,9 @@ private:
         virtual void RobotInit() {
                 
                 flMotor = new Talon( 1 );
+                blMotor = new Talon( 2 );
                 frMotor = new Victor( 3 );
+                brMotor = new Victor( 4 );
                 
                 timer = new Timer();
                 freshness = new Timer();
@@ -41,13 +43,18 @@ private:
                 netRelay = new DualRelay( 3, 4 );
                 netLimit = new DigitalInput( 2 );
                 
+                flEncoder = new Encoder( 9, 10 );
+                blEncoder = new Encoder( 11, 12 );
+                frEncoder = new Encoder( 5, 6 );
+                brEncoder = new Encoder( 7, 8 );
+                
                 gyro = new Gyro( 1 );
                 gyro->Reset();
 
                 driverGamePad = new GamePad( 1 );
                 
                 
-                drive = new Drive( flMotor, frMotor, gyro );
+                drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
 
                 
