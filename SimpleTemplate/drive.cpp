@@ -73,10 +73,11 @@ void Drive::Actuate(){
 	double y = driverY;
 	double turn = driverTurn;
 
-	double fl = ( x ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double bl = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double fr = ( x ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double br = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+
+	double fl = ( y + x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double bl = ( y - x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fr = ( y - x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double br = ( y + x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 
 	flMotor->Set( fl * motorInverters[0] );
 	blMotor->Set( bl * motorInverters[1] );
