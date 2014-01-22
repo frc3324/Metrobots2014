@@ -31,8 +31,8 @@ private:
         
         virtual void RobotInit() {
                 
-                flMotor = new Talon( 1 );
-                blMotor = new Talon( 2 );
+                flMotor = new Jaguar( 1 );
+                blMotor = new Jaguar( 2 );
                 frMotor = new Victor( 3 );
                 brMotor = new Victor( 4 );
                 
