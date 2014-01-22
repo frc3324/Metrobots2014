@@ -128,7 +128,7 @@ private:
                  * RIGHT_X_AXIS: Turn
                  */
                 //drive->SetMecanumXYTurn( driverGamePad->GetAxis( GamePad::LEFT_X ), driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::RIGHT_X ) );
-                drive->SetMecanumRLStrafe( driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::Right_Y ), 0);
+                drive->SetMecanumRLStrafe( driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::RIGHT_Y ), 0);
                         
                 /*
                  * Hold Angle
