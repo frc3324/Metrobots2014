@@ -78,7 +78,12 @@ void Drive::Actuate(){
 	double fr = ( x ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 	double br = ( turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 
+	flMotor->Set( fl * motorInverters[0] );
+	blMotor->Set( bl * motorInverters[1] );
+	frMotor->Set( fr * motorInverters[2] );
+	brMotor->Set( br * motorInverters[3] );
 
+}
 
 void Drive::Disable(){
 
@@ -89,6 +94,14 @@ void Drive::Disable(){
 	blMotor->Set( 0.0 );
 	frMotor->Set( 0.0 );
 	brMotor->Set( 0.0 );
+
+}
+
+void Drive::SetMecanumRLStrafe( double r, double l, double strafe ){
+
+	driverX = strafe;
+	driverY = ( r + l ) / 2;
+	driverTurn = ( l - r ) / 2;
 
 }
 
