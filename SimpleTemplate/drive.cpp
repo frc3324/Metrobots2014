@@ -101,8 +101,8 @@ void Drive::Disable(){
 void Drive::SetMecanumRLStrafe( double r, double l, double strafe ){
 
 	driverX = strafe;
-	driverY = ( r + l ) / 2;
-	driverTurn = ( l - r ) / 2;
+	driverY = ( r + l ) / 2) * ( r + l ) / 2);
+	driverTurn = (( l - r ) / 2) * (( l - r ) / 2);
 
 }
 
