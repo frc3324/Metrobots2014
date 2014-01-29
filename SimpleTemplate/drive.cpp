@@ -53,6 +53,10 @@ Drive::Drive( SpeedController *flMotor_, SpeedController *blMotor_, SpeedControl
 	driverTurn = 0.0;
 }
 
+double clamp(double range, double num) {
+	return (fabs(num < range)) ? 0.0 : num;
+}
+
 void Drive::Actuate(){
 
 	flPID->SetSource( ( 1 / flEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
@@ -74,10 +78,10 @@ void Drive::Actuate(){
 	double turn = driverTurn;
 
 
-	double fl = ( y + x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double bl = ( y - x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double fr = ( y - x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
-	double br = ( y + x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fl = clamp(fl, 0.04) * ( y + x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double bl = clamp(bl, 0.04) * ( y - x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double fr = clamp(fr, 0.04) * ( y - x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+	double br = clamp(br, 0.04) * ( y + x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
 
 	flMotor->Set( fl * motorInverters[0] );
 	blMotor->Set( bl * motorInverters[1] );
