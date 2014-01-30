@@ -24,6 +24,7 @@ private:
         GamePad *driverGamePad;
         
         Drive *drive;
+		Kicker *kicker;
         
         DriverStationLCD *ds;
         //NetworkTable *table;
@@ -51,6 +52,7 @@ private:
                 gyro->Reset();
 
                 driverGamePad = new GamePad( 1 );
+				kickerGamePad = new GamePad( 2 );
                 
                 
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
@@ -119,13 +121,14 @@ private:
                  * Y: Press to toggle OFF
                  */
                 drive->SetPIDControl( driverGamePad->GetButtonDown( GamePad::X ) ? true : ( driverGamePad->GetButtonDown( GamePad::Y ) ? false : drive->IsPIDControl() ) );
-                
+				
                 /*
                  * Mecanum Drive
                  * LEFT_X_AXIS: Strafe Left/Right
                  * LEFT_Y_AXIS: Forward/Reverse
                  * RIGHT_X_AXIS: Turn
                  */
+				
                 drive->SetMecanumXYTurn( driverGamePad->GetAxis( GamePad::LEFT_X ), driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::RIGHT_X ) );
                 //drive->SetMecanumRLStrafe( driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::RIGHT_Y ), 0);
                         
@@ -148,13 +151,11 @@ private:
                 if(driverGamePad->GetDPadRightDown()){
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
-                /*
-                 * Loader Control
-                 * RB: Hold to run Forward
-                 * LB: Hold to run Reverse
-                 */
-
-				 
+					
+				if(kickerGamePad->GetButton( GamePad::A )) {
+						kicker->KickBall();
+				}	
+					
                 
                 Actuate();
                 PrintToDS();
@@ -179,12 +180,13 @@ private:
         void Actuate(){
                 
                 drive->Actuate();
-                
+                kicker->Actuate();
         }
         
         void Disable(){
                 
                 drive->Disable();
+				kicker->Disable();
                 
         }
         
