@@ -13,8 +13,8 @@ class Kicker {
 		void PullBackKicker();
 		void KickBall();
 		
-		SpeedController kicker1;
-		SpeedController kicker2;
+		SpeedController *kicker1;
+		SpeedController *kicker2;
 };
 
 #endif
