@@ -1,10 +1,12 @@
 #include "kicker.h"
 #include <Math.h>
 
-Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_) {
+Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInput *limitSwitch_) {
 
                 kicker1 = kicker1_;
                 kicker2 = kicker2_;
+				
+				limitSwitch = limitSwitch_;
 				
 				state = Nothing;
                 
@@ -20,9 +22,9 @@ void Kicker::Actuate() {
 	if (state == PullingBack) {
 		kicker1->Set(0.0);
 		kicker2->Set(0.0);
-		/*if (limitSwitch->Get()) {
-		 *	state = Nothing;
-		}*/
+		if (limitSwitch->Get()) {
+			state = Nothing;
+		}
 	} else if (state == Kicking) {
 		kicker1->Set(-0.2);
 		kicker2->Set(0.2);

@@ -8,7 +8,7 @@
 class Kicker {
 
 	public:
-		Kicker( SpeedController *kicker1, SpeedController *kicker2/*, DigitalInput *limitSwitch*/);
+		Kicker( SpeedController *kicker1, SpeedController *kicker2, DigitalInput *limitSwitch);
 		~Kicker(){};
 		void PullBackKicker();
 		void KickBall();
@@ -19,7 +19,7 @@ class Kicker {
 		
 		SpeedController *kicker1;
 		SpeedController *kicker2;
-		//DigitalInput *limitSwitch;
+		DigitalInput *limitSwitch;
 };
 
 #endif
