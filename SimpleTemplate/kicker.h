@@ -8,16 +8,18 @@
 class Kicker {
 
 	public:
-		Kicker( SpeedController *kicker1, SpeedController *kicker2, DigitalInput *limitSwitch);
+		Kicker( SpeedController *kicker1, SpeedController *kicker2/*, DigitalInput *limitSwitch*/);
 		~Kicker(){};
 		void PullBackKicker();
 		void KickBall();
+		void Actuate();
+		void Disable();
 		
-		typedef enum {PullingBack, Nothing, Kicking} state;
+		enum {PullingBack, Nothing, Kicking} state;
 		
 		SpeedController *kicker1;
 		SpeedController *kicker2;
-		DigitalInput *limitSwitch;
+		//DigitalInput *limitSwitch;
 };
 
 #endif
