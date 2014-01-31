@@ -15,7 +15,7 @@ private:
         int step;
         Timer *timer, *freshness;
         
-        Talon *flMotor, *blMotor, *frMotor, *brMotor;
+        Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker, *kicker2, *motor, *angleMotor;
         DualRelay *loaderRelay;
         DualRelay *netRelay;
         DigitalInput *netLimit;
@@ -35,6 +35,10 @@ private:
                 blMotor = new Talon( 2 );
                 frMotor = new Talon( 3 );
                 brMotor = new Talon( 4 );
+				kicker = new Talon( 5 );
+				kicker2 = new Talon( 6 );
+				motor = new Talon( 7 );
+				angleMotor = new Talon( 8 );
                 
                 timer = new Timer();
                 freshness = new Timer();
@@ -152,9 +156,16 @@ private:
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
 					
-				if(kickerGamePad->GetButton( GamePad::A )) {
-						kicker->KickBall();
-				}	
+					
+				kickerGamePad->GetButton( GamePad::A )) ? kicker->Kickball(); : kicker->Disable();
+				
+				pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
+				
+				pickup->Intake( kickerGamePad->GetAxis( GamePad:::RIGHT_Y ));
+				
+				/*if(kickerGamePad->GetButton( GamePad::A )) {
+				 *	kicker->KickBall();
+				}*/	
 					
                 
                 Actuate();
@@ -181,13 +192,14 @@ private:
                 
                 drive->Actuate();
                 kicker->Actuate();
+				pickup->Actuate();
         }
         
         void Disable(){
                 
                 drive->Disable();
 				kicker->Disable();
-                
+                pickup->Disable();
         }
         
         void UpdateOI(){
