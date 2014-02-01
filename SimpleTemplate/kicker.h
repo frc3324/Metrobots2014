@@ -8,7 +8,7 @@
 class Kicker {
 
 	public:
-		Kicker( SpeedController *kicker1, SpeedController *kicker2, DigitalInput *limitSwitch);
+		Kicker( SpeedController *kicker1, SpeedController *kicker2, DigitalInput *limitSwitchb, DigitalInput *limitSwitchf, Encoder *encoder);
 		~Kicker(){};
 		void PullBackKicker();
 		void KickBall();
@@ -19,7 +19,12 @@ class Kicker {
 		
 		SpeedController *kicker1;
 		SpeedController *kicker2;
-		DigitalInput *limitSwitch;
+		DigitalInput *limitSwitchb;
+		DigitalInput *limitSwitchf;
+		Encoder *encoder;
+		
+		static const int kickRotationMin = 0;	//dummy value
+		static const int kickRotationMax = 10;	//dummy value
 };
 
 #endif

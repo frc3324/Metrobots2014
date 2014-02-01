@@ -18,10 +18,8 @@ private:
         Timer *timer, *freshness;
         
         Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor, *angleMotor;
-        DualRelay *loaderRelay;
-        DualRelay *netRelay;
-        DigitalInput *netLimit, *limitSwitch;
-        Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder; 
+        DigitalInput *limitSwitchf, *limitSwitchb;
+        Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder, *kickerEncoder; 
         Gyro *gyro;
         GamePad *driverGamePad, *kickerGamePad;
         
@@ -48,13 +46,14 @@ private:
 
                 loaderRelay = new DualRelay( 1, 2 );
                 netRelay = new DualRelay( 3, 4 );
-                netLimit = new DigitalInput( 2 );
-                limitSwitch = new DigitalInput( 14 );
+                limitSwitchb = new DigitalInput( 1 );
+                limitSwitchf = new DigitalInput( 2 );
                 
                 flEncoder = new Encoder( 9, 10 );
                 blEncoder = new Encoder( 11, 12 );
                 frEncoder = new Encoder( 5, 6 );
                 brEncoder = new Encoder( 7, 8 );
+				kickerEncoder = new Encoder( 3, 4 );
                 
                 gyro = new Gyro( 1 );
                 gyro->Reset();
@@ -66,7 +65,7 @@ private:
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
                 
-                kicker = new Kicker( kicker1, kicker2, limitSwitch );
+                kicker = new Kicker( kicker1, kicker2, limitSwitchb, limtSwitchf, kickerEncoder );
                 pickup = new Pickup( pickupMotor, angleMotor );
 
                 
