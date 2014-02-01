@@ -1,4 +1,5 @@
 #include "GamePad.h"
+#include <math.h>
 #include <WPILib.h>
 
 GamePad::GamePad(int port){
@@ -36,7 +37,7 @@ double GamePad::GetAxis( int axis ){
 
     }
 	
-	if( ( output > 0.0 && output < 0.05 ) || ( output < 0.0 && output > -0.05 ) ){
+	if( fabs(output) < GamePad::AXIS_DEADBAND ){
 		output = 0.0;
 	}
 

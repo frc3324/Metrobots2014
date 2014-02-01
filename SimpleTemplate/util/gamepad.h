@@ -16,7 +16,7 @@ class GamePad {
 		bool GetDPadLeftDown();
 		bool GetDPadRightDown();
 
-		static const double AXIS_DEADBAND = 0.10;
+		static const double AXIS_DEADBAND = 0.04;
 		
 		static const int A = 1;
 		static const int B = 2;
