@@ -77,6 +77,33 @@ void Drive::Actuate(){
         double y = driverY;
         double turn = driverTurn;
 
+		
+
+		if( isFieldOriented ){
+	
+			double gAngle = GetGyroAngle();
+			double cosA = cos( gAngle * 3.14159 / 180 );
+			double sinA = sin( gAngle * 3.14159 / 180 );
+	
+			x = driverX*cosA - driverY*sinA;
+			y = driverX*sinA + driverY*cosA;
+
+		}
+	
+		if( isHoldAngle ){
+	
+			double gyroAngle = fmod( GetGyroAngle(), 360.0 );
+			double relativeAngle = gyroAngle - targetAngle;
+	
+			if( relativeAngle > 180 ){
+	
+				relativeAngle = -( 180 - ( relativeAngle - 180 ) );
+	
+			}
+	
+			turn = Drive::ANGLE_P * relativeAngle;
+	
+		}
 
         double fl = ( y - x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
         double bl = ( y + x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
