@@ -7,7 +7,7 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInp
                 kicker2 = kicker2_;
 				
 				limitSwitchb = limitSwitchb_;
-				limitSwitchf = limitSwitchf_
+				limitSwitchf = limitSwitchf_;
 				
 				encoder = encoder_;
 				
@@ -34,7 +34,6 @@ void Kicker::Actuate() {
 		if (limitSwitchf->Get() || encoder->Get() >= kickRotationMax) {
 			state = Nothing;
 		}
-	}
 	} else if (state == Nothing) {
 		kicker1->Set(0.0);
 		kicker2->Set(0.0);
