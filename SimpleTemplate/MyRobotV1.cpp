@@ -4,8 +4,6 @@
 #include "util/metropidcontroller.h"
 #include "util/dualrelay.h"
 #include "drive.h"
-#include "kicker.h"
-#include "pickup.h"
 #include <stdio.h>
 #include <Math.h>
 
@@ -17,17 +15,15 @@ private:
         int step;
         Timer *timer, *freshness;
         
-        Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor, *angleMotor;
+        Talon *flMotor, *blMotor, *frMotor, *brMotor;
         DualRelay *loaderRelay;
         DualRelay *netRelay;
-        DigitalInput *netLimit, *limitSwitch;
+        DigitalInput *netLimit;
         Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder; 
         Gyro *gyro;
-        GamePad *driverGamePad, *kickerGamePad;
+        GamePad *driverGamePad;
         
         Drive *drive;
-		Kicker *kicker;
-		Pickup *pickup;
         
         DriverStationLCD *ds;
         //NetworkTable *table;
@@ -38,10 +34,6 @@ private:
                 blMotor = new Talon( 2 );
                 frMotor = new Talon( 3 );
                 brMotor = new Talon( 4 );
-				kicker1 = new Talon( 5 );
-				kicker2 = new Talon( 6 );
-				pickupMotor = new Talon( 7 );
-				angleMotor = new Talon( 8 );
                 
                 timer = new Timer();
                 freshness = new Timer();
@@ -49,7 +41,6 @@ private:
                 loaderRelay = new DualRelay( 1, 2 );
                 netRelay = new DualRelay( 3, 4 );
                 netLimit = new DigitalInput( 2 );
-                limitSwitch = new DigitalInput( 14 );
                 
                 flEncoder = new Encoder( 9, 10 );
                 blEncoder = new Encoder( 11, 12 );
@@ -60,14 +51,10 @@ private:
                 gyro->Reset();
 
                 driverGamePad = new GamePad( 1 );
-				kickerGamePad = new GamePad( 2 );
                 
                 
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
-                
-                kicker = new Kicker( kicker1, kicker2, limitSwitch );
-                pickup = new Pickup( pickupMotor, angleMotor );
 
                 
                 ds = DriverStationLCD::GetInstance();
@@ -132,16 +119,14 @@ private:
                  * Y: Press to toggle OFF
                  */
                 drive->SetPIDControl( driverGamePad->GetButtonDown( GamePad::X ) ? true : ( driverGamePad->GetButtonDown( GamePad::Y ) ? false : drive->IsPIDControl() ) );
-				
+                
                 /*
                  * Mecanum Drive
                  * LEFT_X_AXIS: Strafe Left/Right
                  * LEFT_Y_AXIS: Forward/Reverse
                  * RIGHT_X_AXIS: Turn
                  */
-				
                 drive->SetMecanumXYTurn( driverGamePad->GetAxis( GamePad::LEFT_X ), driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::RIGHT_X ) );
-                //drive->SetMecanumRLStrafe( driverGamePad->GetAxis( GamePad::LEFT_Y ), driverGamePad->GetAxis( GamePad::RIGHT_Y ), 0);
                         
                 /*
                  * Hold Angle
@@ -162,23 +147,13 @@ private:
                 if(driverGamePad->GetDPadRightDown()){
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
-					
-				if( driverGamePad->GetAxis( GamePad::A ) ){
-					kicker->KickBall();
-				}
-				if( driverGamePad->GetAxis( GamePad::A ) != 1) {
-					kicker->Disable();
-				}
-				
-				
-				pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
-				
-				pickup->Intake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
-				
-				/*if(kickerGamePad->GetButton( GamePad::A )) {
-				 *	kicker->KickBall();
-				}*/	
-					
+                /*
+                 * Loader Control
+                 * RB: Hold to run Forward
+                 * LB: Hold to run Reverse
+                 */
+
+				 
                 
                 Actuate();
                 PrintToDS();
@@ -203,15 +178,13 @@ private:
         void Actuate(){
                 
                 drive->Actuate();
-                kicker->Actuate();
-				pickup->Actuate();
+                
         }
         
         void Disable(){
                 
                 drive->Disable();
-				kicker->Disable();
-                pickup->Disable();
+                
         }
         
         void UpdateOI(){
@@ -258,6 +231,5 @@ private:
         }
         
 };
-
 
 START_ROBOT_CLASS(CommandBasedRobot);

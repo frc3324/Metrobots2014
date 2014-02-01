@@ -26,10 +26,10 @@ void Pickup::Disable() {
 	pickupState = Nothing;
 }
 
-void Intake(double wheelSpeed) {
+void Pickup::Intake(double wheelSpeed) {
 	motor->Set(wheelSpeed);
 }
 
-void ArmAngle(double upMotorSpeed) {
+void Pickup::ArmAngle(double upMotorSpeed) {
 	angleMotor->Set(upMotorSpeed);
 }
