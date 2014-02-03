@@ -44,8 +44,6 @@ private:
                 timer = new Timer();
                 freshness = new Timer();
 
-                loaderRelay = new DualRelay( 1, 2 );
-                netRelay = new DualRelay( 3, 4 );
                 limitSwitchb = new DigitalInput( 1 );
                 limitSwitchf = new DigitalInput( 2 );
                 
@@ -65,7 +63,7 @@ private:
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
                 
-                kicker = new Kicker( kicker1, kicker2, limitSwitchb, limtSwitchf, kickerEncoder );
+                kicker = new Kicker( kicker1, kicker2, limitSwitchb, limitSwitchf, kickerEncoder );
                 pickup = new Pickup( pickupMotor, angleMotor );
 
                 
@@ -162,10 +160,10 @@ private:
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
 					
-				if( driverGamePad->GetAxis( GamePad::A ) ){
+				if( kickerGamePad->GetAxis( GamePad::A ) ){
 					kicker->KickBall();
 				}
-				if( driverGamePad->GetAxis( GamePad::A ) != 1) {
+				if( kickerGamePad->GetAxis( GamePad::A ) != 1) {
 					kicker->Disable();
 				}
 				
