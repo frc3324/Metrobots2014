@@ -22,26 +22,26 @@ void Pickup::Disable() {
 	motor->Set(0.0);
 }
 
-void RunIntake(double wheelSpeed) {
+void Pickup::RunIntake(double wheelSpeed) {
 	motorSpeed = wheelSpeed;
 }
 
-void ArmAngle(double upMotorSpeed) {
+void Pickup::ArmAngle(double upMotorSpeed) {
 	angleMotorSpeed = upMotorSpeed;
 }
 
-void Raise() {
+void Pickup::Raise() {
 	angleMotorSpeed = 0.5;
 }
 
-void Lower() {
+void Pickup::Lower() {
 	angleMotorSpeed = -0.5;
 }
 
-void Intake() {
+void Pickup::Intake() {
 	motorSpeed = 0.5;
 }
 
-void Expel() {
+void Pickup::Expel() {
 	motorSpeed = -0.5;
 }
