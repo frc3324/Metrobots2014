@@ -160,10 +160,9 @@ private:
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
 					
-				if( kickerGamePad->GetAxis( GamePad::A ) ){
+				if( kickerGamePad->GetButton( GamePad::A ) ){
 					kicker->KickBall();
-				}
-				if( kickerGamePad->GetAxis( GamePad::A ) != 1) {
+				}else if( kickerGamePad->GetButton( GamePad::A ) != 1) {
 					kicker->Disable();
 				}
 				
