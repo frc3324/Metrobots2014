@@ -170,7 +170,7 @@ private:
 				
 				pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
 				
-				pickup->Intake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
+				pickup->RunIntake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
 				
 				/*if(kickerGamePad->GetButton( GamePad::A )) {
 				 *	kicker->KickBall();

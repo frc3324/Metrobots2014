@@ -3,33 +3,45 @@
 
 Pickup::Pickup( SpeedController *motor_, SpeedController *angleMotor_ ) {
 
-                motor = motor_;
-				angleMotor = angleMotor_;
+	motor = motor_;
+	angleMotor = angleMotor_;
+	angleMotorSpeed = 0.0;
+	motorSpeed = 0.0;
                 
 }
 
 void Pickup::Actuate() {
-	
-	if (pickupState == Pushing) {
-		motor->Set(0.5);
-	}
-	if (pickupState == Pulling) {
-		motor->Set(-0.5);
-	}
-	if (pickupState == Nothing) {
-		motor->Set(0.0);
-		angleMotor->Set(0.0);
-	}
+	motor->Set(motorSpeed);
+	angleMotor->Set(angleMotorSpeed);
 }
 
 void Pickup::Disable() {
-	pickupState = Nothing;
+	angleMotorSpeed = 0.0;
+	motorSpeed = 0.0;
+	angleMotor->Set(0.0);
+	motor->Set(0.0);
 }
 
-void Pickup::Intake(double wheelSpeed) {
-	motor->Set(wheelSpeed);
+void RunIntake(double wheelSpeed) {
+	motorSpeed = wheelSpeed;
 }
 
-void Pickup::ArmAngle(double upMotorSpeed) {
-	angleMotor->Set(upMotorSpeed);
+void ArmAngle(double upMotorSpeed) {
+	angleMotorSpeed = upMotorSpeed;
+}
+
+void Raise() {
+	angleMotorSpeed = 0.5;
+}
+
+void Lower() {
+	angleMotorSpeed = -0.5;
+}
+
+void Intake() {
+	motorSpeed = 0.5;
+}
+
+void Expel() {
+	motorSpeed = -0.5;
 }

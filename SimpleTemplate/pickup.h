@@ -11,8 +11,12 @@ class Pickup {
 		Pickup( SpeedController *motor, SpeedController *angleMotor );
 		~Pickup(){};
 		void Actuate();
-		void Intake(double wheelSpeed);
+		void RunIntake(double wheelSpeed);
 		void ArmAngle(double upMotorSpeed);
+		void Raise();
+		void Lower();
+		void Intake();
+		void Expel();
 		void Disable();
 		
 		enum {Pushing, Pulling, Nothing} pickupState;
@@ -20,7 +24,7 @@ class Pickup {
 		SpeedController *motor;
 		SpeedController *angleMotor;
 		
-		double upMotorSpeed;
+		double angleMotorSpeed, motorSpeed;
 };
 
 #endif
