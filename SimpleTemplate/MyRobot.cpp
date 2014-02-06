@@ -30,6 +30,8 @@ private:
         DriverStationLCD *ds;
         //NetworkTable *table;
         
+        int state;
+        
         virtual void RobotInit() {
                 
                 flMotor = new Talon( 1 );
@@ -65,6 +67,7 @@ private:
                 
                 kicker = new Kicker( kicker1, kicker2, limitSwitchb, limitSwitchf, kickerEncoder );
                 pickup = new Pickup( pickupMotor, angleMotor );
+                
 
                 
                 ds = DriverStationLCD::GetInstance();
@@ -159,21 +162,14 @@ private:
                 if(driverGamePad->GetDPadRightDown()){
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
-					
-				if( kickerGamePad->GetButton( GamePad::A ) ){
-					kicker->KickBall();
-				}else if( kickerGamePad->GetButton( GamePad::A ) != 1) {
-					kicker->Disable();
-				}
-				
-				
+                
+                if( kickerGamePad->GetButton( GamePad::A )){
+                	kicker->KickBall();
+                }
+                
 				pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
 				
 				pickup->RunIntake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
-				
-				/*if(kickerGamePad->GetButton( GamePad::A )) {
-				 *	kicker->KickBall();
-				}*/	
 					
                 
                 Actuate();
@@ -213,6 +209,7 @@ private:
         void UpdateOI(){
 
                 driverGamePad->Update();
+                kickerGamePad->Update();
                 IsFreshTarget();
                 
         }
@@ -223,7 +220,7 @@ private:
                 ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == ShootScript ? "Shoot" : ( script == BangBangScript ? "BangBang" : ( script == NoScript ? "None" : "YOU BROKE IT" ) ) );
                 ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s%f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->GetGyroAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
-                ds->Printf(DriverStationLCD::kUser_Line4, 1, "" );
+                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%f", kicker->t->Get() );
                 ds->UpdateLCD();
                 
         }

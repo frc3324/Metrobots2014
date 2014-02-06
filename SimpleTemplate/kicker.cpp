@@ -11,44 +11,58 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInp
 				
 				encoder = encoder_;
 				
-				state = Nothing;
-                
-}
+				kicker1->Set(0.0);
+				kicker2->Set(0.0);
+				
+				isKicking = false;
+				isPullingBack = false;
+				isSitting = false;
+				
+				t = new Timer();
+				t->Start();
 
-void Kicker::PullBackKicker() {
-        state = PullingBack;
-        //kicker1->Set(-1.0);
-		//kicker2->Set(1.0);
 }
 
 void Kicker::Actuate() {
-	if (state == PullingBack) {
-		kicker1->Set(0.0);
-		kicker2->Set(0.0);
-		if (limitSwitchb->Get() || encoder->Get() <= kickRotationMin) {
-			state = Nothing;
+	 if (isPullingBack) {
+			kicker1->Set(-1.0);
+			kicker2->Set(-1.0);
+			if (t->Get() >= 0.3) {
+				t->Reset();
+				isPullingBack = false;
+				isSitting = true;
+			}
+	 }else if (isSitting){
+		 kicker1->Set(0);
+		 kicker2->Set(0);
+		 if (t->Get() >= 0.05) {
+			 t->Reset();
+			 isSitting = false;
+			 isKicking = true;
+		 }
+	 }
+	 else if (isKicking) {
+		kicker1->Set(1.0);
+		kicker2->Set(1.0);
+		if (t->Get() >= 0.7) {
+			isKicking = false;
+			kicker1->Set(0);
+			kicker2->Set(0);
+			t->Reset();
 		}
-	} else if (state == Kicking) {
-		kicker1->Set(-0.2);
-		kicker2->Set(0.2);
-		if (limitSwitchf->Get() || encoder->Get() >= kickRotationMax) {
-			state = Nothing;
-		}
-	} else if (state == Nothing) {
+	}else {
 		kicker1->Set(0.0);
 		kicker2->Set(0.0);
 	}
 }
 
-void Kicker::KickBall() {
-        state = Kicking;
-        //kicker1->Set(-0.2);
-		//kicker2->Set(0.2);
-        
+void Kicker::KickBall(){
+	t->Reset();
+	isPullingBack = true;
 }
 
 void Kicker::Disable() {
-		state = Nothing;
-		//kicker1->Set(0);
-		//kicker2->Set(0);
+	kicker1->Set(0);
+	kicker2->Set(0);
+	kickerSpeed = 0;
 }

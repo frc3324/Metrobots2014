@@ -36,9 +36,9 @@ class GamePad {
 		static const int RIGHT_Y = 5;
 		static const int DPAD_X = 6;
 		static const int DPAD_Y = 7;
+		Joystick *joystick_;
 		
 	private:
-		Joystick *joystick_;
 				
 		bool oldBtnStates[ MAX_NUM_BUTTONS ];
 		bool newBtnStates[ MAX_NUM_BUTTONS ];

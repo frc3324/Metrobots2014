@@ -10,12 +10,14 @@ class Kicker {
 	public:
 		Kicker( SpeedController *kicker1, SpeedController *kicker2, DigitalInput *limitSwitchb, DigitalInput *limitSwitchf, Encoder *encoder);
 		~Kicker(){};
-		void PullBackKicker();
 		void KickBall();
 		void Actuate();
 		void Disable();
+		Timer* t;
 		
-		enum {PullingBack, Nothing, Kicking} state;
+		enum {Nothing, PullingBack, Kicking} state;
+		
+		//int state;  // 0 = Nothing, 1 = Pulling Back, 2 = Kicking
 		
 		SpeedController *kicker1;
 		SpeedController *kicker2;
@@ -24,7 +26,10 @@ class Kicker {
 		Encoder *encoder;
 		
 		static const int kickRotationMin = 0;	//dummy value
-		static const int kickRotationMax = 10;	//dummy value
+		static const int kickRotationMax = 10;	//dummy value3
+		
+		double kickerSpeed;
+		bool isKicking, isPullingBack, isSitting;
 };
 
 #endif
