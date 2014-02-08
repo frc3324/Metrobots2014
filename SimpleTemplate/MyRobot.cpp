@@ -12,7 +12,7 @@
 class CommandBasedRobot : public IterativeRobot {
 private:
         
-        typedef enum {NoScript, ShootScript, BangBangScript} AutonScript;
+        typedef enum {Kick, DoubleKick, Forward, NoScript} AutonScript;
         AutonScript script;
         int step;
         Timer *timer, *freshness;
@@ -76,7 +76,7 @@ private:
                 ////net->PutNumber("angle", 0.0);
                 ////net->PutBoolean("hasAngle", 0.0);
                 
-                script = ShootScript;
+                script = Forward;
                 step = 0;
                 timer->Reset();
                 timer->Start();
@@ -93,7 +93,40 @@ private:
                 drive->ResetGyro();
         }
         
-        virtual void AutonomousPeriodic() {        }
+        virtual void AutonomousPeriodic() {
+			
+			if (script == Kick) {
+				switch(step) {
+				case 1:
+					drive->SetPIDControl( true );
+					flMotor->Set(2/3);
+					blMotor->Set(2/3);
+					frMotor->Set(2/3);
+					brMotor->Set(2/3);
+					if (flEncoder >= 1){
+						
+					}
+				default:
+				}
+			}else if (script == DoubleKick) {
+				
+			}else if (script == Foward) {
+			
+				drive->SetPIDControl( true );
+				flMotor->Set(1);
+				blMotor->Set(1);
+				frMotor->Set(1);
+				brMotor->Set(1);
+				timer->Reset();
+				if (timer->Get() >= 2) {
+					flMotor->Set(0);
+					blMotor->Set(0);
+					frMotor->Set(0);
+					brMotor->Set(0);
+				}
+			}			
+			
+		}
         
         virtual void TeleopInit() {
                 
@@ -186,8 +219,15 @@ private:
         virtual void DisabledPeriodic() {
                 
                 UpdateOI();
-
-                                
+					
+                if (driverGamePad->Get( GamePad::A )) {
+					script = Kick;
+				}else if (driverGamePad->Get( GamePad::B )) {
+					script = DoubleKick;
+				}else if (driverGamePad->Get( GamePad::X )) {
+					script = Forward;
+				}
+					
                 PrintToDS();
                 
         }
@@ -217,10 +257,10 @@ private:
         void PrintToDS(){
                 
                 ds->Clear();
-                ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == ShootScript ? "Shoot" : ( script == BangBangScript ? "BangBang" : ( script == NoScript ? "None" : "YOU BROKE IT" ) ) );
+                ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == Kick ? "Single Kick" : ( script == DoubleKick ? "DoubleKick" : ( script == Forward ? "Forward" :( script == NoScript ? "None" : "YOU BROKE IT" ) ) ) );
                 ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s%f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->GetGyroAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
-                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%f", kicker->t->Get() );
+                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%f", flEncoder->Get() );
                 ds->UpdateLCD();
                 
         }
