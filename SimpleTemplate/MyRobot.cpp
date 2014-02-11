@@ -97,19 +97,47 @@ class CommandBasedRobot : public IterativeRobot {
 			
 			if (script == Kick) {
 				drive->SetPIDControl( true );
+				kicker->KickBallN();
+				if (timer->Get() >= 1.5) {
+					flMotor->Set(2/3);
+					blMotor->Set(2/3);
+					frMotor->Set(2/3);
+					brMotor->Set(2/3);
+					if (timer->Get() > = 3.5) {
+						flMotor->Set(0);
+						blMotor->Set(0);
+						frMotor->Set(0);
+						brMotor->Set(0);
+					}
+				}
+			}else if (script == DoubleKick) {
+				drive->SetPIDControl( true );
+				kicker->KickBallN();
+				if (timer->Get() >= 1) {
+					flMotor->Set(2/3);
+					blMotor->Set(2/3);
+					frMotor->Set(2/3);
+					brMotor->Set(2/3);
+					pickup->RunIntake(-1);
+					if (timer->Get() >= 1.5) {
+						flMotor->Set(0);
+						blMotor->Set(0);
+						frMotor->Set(0);
+						brMotor->Set(0);
+						pickup->ArmAngle(1);
+						if (timer->Get() >= 2) {
+							pickup->ArmAngle(0);
+							kicker->KickBallN();
+						}
+					}
+				}
+			}else if (script == Forward) {
+			
+				drive->SetPIDControl( true );
 				flMotor->Set(2/3);
 				blMotor->Set(2/3);
 				frMotor->Set(2/3);
 				brMotor->Set(2/3);
-			}else if (script == DoubleKick) {
-			
-			}else if (script == Forward) {
-			
-				drive->SetPIDControl( true );
-				flMotor->Set(1);
-				blMotor->Set(1);
-				frMotor->Set(1);
-				brMotor->Set(1);
 				timer->Reset();
 				if (timer->Get() >= 2) {
 					flMotor->Set(0);
@@ -118,7 +146,7 @@ class CommandBasedRobot : public IterativeRobot {
 					brMotor->Set(0);
 				}
 			}
-        }
+		}
         
 		
         
@@ -190,17 +218,7 @@ class CommandBasedRobot : public IterativeRobot {
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
                 
-                if( kickerGamePad->GetButton( GamePad::A )){
-                	kicker->KickBall();
-                }
-                
-				pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
-				
-				pickup->RunIntake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
-				
-                
-                
-                if( kickerGamePad->GetButton( GamePad::B )) {
+                if( kickerGamePad->GetButton( GamePad::A )) {
                 	kicker->KickBallN();
                 }
                 
