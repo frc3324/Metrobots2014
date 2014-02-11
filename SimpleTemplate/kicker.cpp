@@ -22,30 +22,39 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInp
 				t->Start();
 
 }
-
+	
 void Kicker::Actuate() {
-	 if (isPullingBack) {
-			kicker1->Set(-1.0);
-			kicker2->Set(-1.0);
-			if (t->Get() >= 0.3) {
-				t->Reset();
-				isPullingBack = false;
-				isSitting = true;
-			}
-	 }else if (isSitting){
-		 kicker1->Set(0);
-		 kicker2->Set(0);
-		 if (t->Get() >= 0.05) {
-			 t->Reset();
-			 isSitting = false;
-			 isKicking = true;
-		 }
+	if (isPullingBack) {
+		kicker1->Set(-1.0);
+		kicker2->Set(-1.0);
+		if (t->Get() >= 1.25) {
+			t->Reset();
+			isPullingBack = false;
+			isSitting = true;
+		}
+	}else if (isSitting){
+	 kicker1->Set(0);
+	 kicker2->Set(0);
+	 if (t->Get() >= 0.05) {
+		 t->Reset();
+		 isSitting = false;
+		 isKicking = true;
 	 }
-	 else if (isKicking) {
+	}else if (isKicking) {
 		kicker1->Set(1.0);
 		kicker2->Set(1.0);
-		if (t->Get() >= 0.7) {
+		if (t->Get() >= 0.75) {
 			isKicking = false;
+			isRetracting = true;
+			kicker1->Set(0);
+			kicker2->Set(0);
+			t->Reset();
+		}
+	}else if (isRetracting){
+		kicker1->Set(-1);
+		kicker2->Set(-1);
+		if (t->Get() >= 0.35) {
+			isRetracting = false;
 			kicker1->Set(0);
 			kicker2->Set(0);
 			t->Reset();
@@ -61,8 +70,12 @@ void Kicker::KickBall(){
 	isPullingBack = true;
 }
 
+void Kicker::KickBallN() {
+	t->Reset();
+	isKicking = true;
+}
+
 void Kicker::Disable() {
 	kicker1->Set(0);
 	kicker2->Set(0);
-	kickerSpeed = 0;
 }

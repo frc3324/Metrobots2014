@@ -6,18 +6,18 @@
 #include "util/metropidcontroller.h"
 
 class Kicker {
-
+	
 	public:
 		Kicker( SpeedController *kicker1, SpeedController *kicker2, DigitalInput *limitSwitchb, DigitalInput *limitSwitchf, Encoder *encoder);
 		~Kicker(){};
 		void KickBall();
 		void Actuate();
 		void Disable();
+		void KickBallN();
 		Timer* t;
 		
 		enum {Nothing, PullingBack, Kicking} state;
-		
-		//int state;  // 0 = Nothing, 1 = Pulling Back, 2 = Kicking
+		//int state; // 0 = Nothing, 1 = Pulling Back, 2 = Kicking
 		
 		SpeedController *kicker1;
 		SpeedController *kicker2;
@@ -28,8 +28,7 @@ class Kicker {
 		static const int kickRotationMin = 0;	//dummy value
 		static const int kickRotationMax = 10;	//dummy value3
 		
-		double kickerSpeed;
-		bool isKicking, isPullingBack, isSitting;
+		bool isKicking, isPullingBack, isSitting, isRetracting;
 };
 
 #endif
