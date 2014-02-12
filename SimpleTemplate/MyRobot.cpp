@@ -92,59 +92,53 @@ class CommandBasedRobot : public IterativeRobot {
                 timer->Reset();
                 drive->ResetGyro();
         }
+
+		void AdvanceStep() {
+			step++;
+			timer->Reset();
+		}
         
         virtual void AutonomousPeriodic() {
 			
 			if (script == Kick) {
-				drive->SetPIDControl( true );
-				kicker->KickBallN();
-				if (timer->Get() >= 1.5) {
-					flMotor->Set(2/3);
-					blMotor->Set(2/3);
-					frMotor->Set(2/3);
-					brMotor->Set(2/3);
-					if (timer->Get() > = 3.5) {
-						flMotor->Set(0);
-						blMotor->Set(0);
-						frMotor->Set(0);
-						brMotor->Set(0);
-					}
+				switch (step) {
+				case 0:
+					kicker->KickBallN();
+					if (timer->Get() >= 1.5) AdvanceStep();
+				case 1:
+					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
+					if (timer->Get() >= 2) AdvanceStep();
+				case 2:
+					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
 				}
+				//drive->SetPIDControl( true );
 			}else if (script == DoubleKick) {
-				drive->SetPIDControl( true );
-				kicker->KickBallN();
-				if (timer->Get() >= 1) {
-					flMotor->Set(2/3);
-					blMotor->Set(2/3);
-					frMotor->Set(2/3);
-					brMotor->Set(2/3);
+				switch (step) {
+				case 0:
+					kicker->KickBallN();
+					if (timer->Get() >= 1) AdvanceStep();
+				case 1:
+					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
 					pickup->RunIntake(-1);
-					if (timer->Get() >= 1.5) {
-						flMotor->Set(0);
-						blMotor->Set(0);
-						frMotor->Set(0);
-						brMotor->Set(0);
-						pickup->ArmAngle(1);
-						if (timer->Get() >= 2) {
-							pickup->ArmAngle(0);
-							kicker->KickBallN();
-						}
-					}
+					if (timer->Get() >= 0.5) AdvanceStep();
+				case 2:
+					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
+					pickup->ArmAngle(1);
+					if (timer->Get() >= 0.5) AdvanceStep();
+				case 3:
+					pickup->ArmgAngle(0);
+					kicker->KickBallN();
 				}
+				//drive->SetPIDControl( true );
 			}else if (script == Forward) {
-			
-				drive->SetPIDControl( true );
-				flMotor->Set(2/3);
-				blMotor->Set(2/3);
-				frMotor->Set(2/3);
-				brMotor->Set(2/3);
-				timer->Reset();
-				if (timer->Get() >= 2) {
-					flMotor->Set(0);
-					blMotor->Set(0);
-					frMotor->Set(0);
-					brMotor->Set(0);
+				switch (step) {
+				case 0:
+					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
+					if (timer->Get() >= 1.5) AdvanceStep();
+				case 1:
+					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
 				}
+				//drive->SetPIDControl( true );
 			}
 		}
         
