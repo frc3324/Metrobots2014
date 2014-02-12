@@ -63,13 +63,17 @@ void Kicker::Actuate() {
 }
 
 void Kicker::KickBall(){
-	t->Reset();
-	isPullingBack = true;
+	if (state == Nothing) {
+		t->Reset();
+		state = PullingBack;
+	}
 }
 
 void Kicker::KickBallN() {
-	t->Reset();
-	isKicking = true;
+	if (state == Nothing) {
+		t->Reset();
+		state = Kicking;
+	}
 }
 
 void Kicker::Disable() {
