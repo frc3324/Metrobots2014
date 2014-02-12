@@ -24,37 +24,34 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInp
 }
 	
 void Kicker::Actuate() {
-	if (isPullingBack) {
+	if (state == PullingBack) {
 		kicker1->Set(-1.0);
 		kicker2->Set(-1.0);
 		if (t->Get() >= 1.25) {
 			t->Reset();
-			isPullingBack = false;
-			isSitting = true;
+			state = Sitting;
 		}
-	}else if (isSitting){
+	}else if (state == Sitting){
 	 kicker1->Set(0);
 	 kicker2->Set(0);
 	 if (t->Get() >= 0.05) {
 		 t->Reset();
-		 isSitting = false;
-		 isKicking = true;
+		 state = Kicking;
 	 }
-	}else if (isKicking) {
+	}else if (state == Kicking) {
 		kicker1->Set(1.0);
 		kicker2->Set(1.0);
 		if (t->Get() >= 0.75) {
-			isKicking = false;
-			isRetracting = true;
+			state = Retracting;
 			kicker1->Set(0);
 			kicker2->Set(0);
 			t->Reset();
 		}
-	}else if (isRetracting){
+	}else if (state == Retracting){
 		kicker1->Set(-1);
 		kicker2->Set(-1);
 		if (t->Get() >= 0.35) {
-			isRetracting = false;
+			state = Nothing;
 			kicker1->Set(0);
 			kicker2->Set(0);
 			t->Reset();
