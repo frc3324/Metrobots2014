@@ -134,6 +134,9 @@ class CommandBasedRobot : public IterativeRobot {
 				case 3:
 					pickup->ArmAngle(0);
 					kicker->KickBallN();
+					if (timer->Get() >= 2.4) AdvanceStep();
+					break;
+				case 4:
 					break;
 				}
 				//drive->SetPIDControl( true );
