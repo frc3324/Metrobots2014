@@ -140,6 +140,9 @@ class CommandBasedRobot : public IterativeRobot {
 				}
 				//drive->SetPIDControl( true );
 			}
+			
+			Actuate();
+			
 		}
         
 		
