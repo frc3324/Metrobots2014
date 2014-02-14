@@ -105,11 +105,14 @@ class CommandBasedRobot : public IterativeRobot {
 				case 0:
 					kicker->KickBallN();
 					if (timer->Get() >= 1.5) AdvanceStep();
+					break;
 				case 1:
 					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
 					if (timer->Get() >= 2) AdvanceStep();
+					break;
 				case 2:
 					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
+					break;
 				}
 				//drive->SetPIDControl( true );
 			}else if (script == DoubleKick) {
@@ -117,17 +120,21 @@ class CommandBasedRobot : public IterativeRobot {
 				case 0:
 					kicker->KickBallN();
 					if (timer->Get() >= 1) AdvanceStep();
+					break;
 				case 1:
 					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
 					pickup->RunIntake(-1);
 					if (timer->Get() >= 0.5) AdvanceStep();
+					break;
 				case 2:
 					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
 					pickup->ArmAngle(1);
 					if (timer->Get() >= 0.5) AdvanceStep();
+					break;
 				case 3:
 					pickup->ArmgAngle(0);
 					kicker->KickBallN();
+					break;
 				}
 				//drive->SetPIDControl( true );
 			}else if (script == Forward) {
@@ -135,13 +142,16 @@ class CommandBasedRobot : public IterativeRobot {
 				case 0:
 					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
 					if (timer->Get() >= 1.5) AdvanceStep();
+					break;
 				case 1:
 					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
+					break;
 				}
 				//drive->SetPIDControl( true );
 			}
 			
 			Actuate();
+			PrintToDS();
 			
 		}
         
