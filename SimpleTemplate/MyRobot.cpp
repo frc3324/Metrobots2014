@@ -132,7 +132,7 @@ class CommandBasedRobot : public IterativeRobot {
 					if (timer->Get() >= 0.5) AdvanceStep();
 					break;
 				case 3:
-					pickup->ArmgAngle(0);
+					pickup->ArmAngle(0);
 					kicker->KickBallN();
 					break;
 				}
