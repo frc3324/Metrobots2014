@@ -4,17 +4,19 @@
 #include "WPILib.h"
 #include <Math.h>
 #include "util/metropidcontroller.h"
+#include "util/dualrelay.h"
 
 class Pickup {
 
 	public:
-		Pickup( SpeedController *motor, SpeedController *angleMotor );
+		Pickup( SpeedController *motor, DualRelay *angleMotor );
 		~Pickup(){};
 		void Actuate();
 		void RunIntake(double wheelSpeed);
 		void ArmAngle(double upMotorSpeed);
 		void Raise();
 		void Lower();
+		void StopAngle();
 		void Intake();
 		void Expel();
 		void Disable();
@@ -22,9 +24,10 @@ class Pickup {
 		enum {Pushing, Pulling, Nothing} pickupState;
 		
 		SpeedController *motor;
-		SpeedController *angleMotor;
+		DualRelay *angleMotor;
 		
-		double angleMotorSpeed, motorSpeed;
+		double motorSpeed;
+		Relay::Value angleMotorBool;
 };
 
 #endif

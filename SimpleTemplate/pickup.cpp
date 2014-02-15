@@ -1,24 +1,23 @@
 #include "pickup.h"
 #include <Math.h>
 
-Pickup::Pickup( SpeedController *motor_, SpeedController *angleMotor_ ) {
+Pickup::Pickup( SpeedController *motor_, DualRelay *angleMotor_ ) {
 
 	motor = motor_;
 	angleMotor = angleMotor_;
-	angleMotorSpeed = 0.0;
+	angleMotorBool = Relay::kOff;
 	motorSpeed = 0.0;
                 
 }
 
 void Pickup::Actuate() {
 	motor->Set(motorSpeed);
-	angleMotor->Set(angleMotorSpeed);
+	angleMotor->Set(angleMotorBool);
 }
 
 void Pickup::Disable() {
-	angleMotorSpeed = 0.0;
 	motorSpeed = 0.0;
-	angleMotor->Set(0.0);
+	angleMotor->Set(Relay::kOff);
 	motor->Set(0.0);
 }
 
@@ -27,15 +26,19 @@ void Pickup::RunIntake(double wheelSpeed) {
 }
 
 void Pickup::ArmAngle(double upMotorSpeed) {
-	angleMotorSpeed = upMotorSpeed;
+	//angleMotorSpeed = upMotorSpeed;
 }
 
 void Pickup::Raise() {
-	angleMotorSpeed = 0.5;
+	angleMotorBool = Relay::kReverse;
 }
 
 void Pickup::Lower() {
-	angleMotorSpeed = -0.5;
+	angleMotorBool = Relay::kForward;
+}
+
+void Pickup::StopAngle() {
+	angleMotorBool = Relay::kOff;
 }
 
 void Pickup::Intake() {

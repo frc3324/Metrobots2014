@@ -17,7 +17,8 @@ class CommandBasedRobot : public IterativeRobot {
         int step;
         Timer *timer, *freshness;
         
-        Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor, *angleMotor;
+        Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor;
+        DualRelay *angleMotor;
         DigitalInput *limitSwitchf, *limitSwitchb;
         Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder, *kickerEncoder;
         Gyro *gyro;
@@ -41,7 +42,7 @@ class CommandBasedRobot : public IterativeRobot {
 				kicker1 = new Talon( 5 );
 				kicker2 = new Talon( 6 );
 				pickupMotor = new Talon( 7 );
-				angleMotor = new Talon( 8 );
+				angleMotor = new DualRelay( 1, 2 );
 							
                 timer = new Timer();
                 freshness = new Timer();
@@ -128,11 +129,11 @@ class CommandBasedRobot : public IterativeRobot {
 					break;
 				case 2:
 					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
-					pickup->ArmAngle(1);
+					pickup->Lower();
 					if (timer->Get() >= 0.5) AdvanceStep();
 					break;
 				case 3:
-					pickup->ArmAngle(0);
+					pickup->Disable();
 					kicker->KickBallN();
 					if (timer->Get() >= 2.4) AdvanceStep();
 					break;
@@ -239,10 +240,17 @@ class CommandBasedRobot : public IterativeRobot {
                 	brEncoder->Reset();
                 }
                 
-                pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
+                //pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
 
                 pickup->RunIntake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
-
+                
+                if( kickerGamePad->GetButton( GamePad::B ) && !kickerGamePad->GetButton( GamePad::Y )) {
+                	pickup->Raise();
+                }else if( kickerGamePad->GetButton( GamePad::Y ) && !kickerGamePad->GetButton( GamePad::X )) {
+                	pickup->Lower();
+                }else{
+                	pickup->StopAngle();
+                }
                 
                 Actuate();
                 PrintToDS();
