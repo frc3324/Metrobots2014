@@ -60,9 +60,9 @@ double clamp(double range, double num) {
 void Drive::Actuate(){
 
         flPID->SetSource( ( 1 / flEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
-        blPID->SetSource( ( 1 / blEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
+        blPID->SetSource( -( 1 / blEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
         frPID->SetSource( -( 1 / frEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
-        brPID->SetSource( -( 1 / brEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
+        brPID->SetSource( ( 1 / brEncoder->GetPeriod() ) / Drive::VEL_PID_MULTIPLIER );
 
         double flVel = 1 / flEncoder->GetPeriod() / Drive::VEL_PID_MULTIPLIER;
         double blVel = 1 / flEncoder->GetPeriod() / Drive::VEL_PID_MULTIPLIER;
