@@ -69,15 +69,13 @@ void Drive::Actuate(){
         double frVel = -1 / flEncoder->GetPeriod() / Drive::VEL_PID_MULTIPLIER;
         double brVel = -1 / flEncoder->GetPeriod() / Drive::VEL_PID_MULTIPLIER;
 
-        xPID->SetSource( flVel + brVel - blVel - frVel );
+        /*xPID->SetSource( flVel + brVel - blVel - frVel );
         yPID->SetSource( flVel + brVel + blVel + frVel );
-        turnPID->SetSource( flVel - brVel + blVel - frVel );
+        turnPID->SetSource( flVel - brVel + blVel - frVel );*/
         
         double x = driverX;
         double y = driverY;
         double turn = driverTurn;
-
-		
 
 		if( isFieldOriented ){
 	
@@ -109,6 +107,25 @@ void Drive::Actuate(){
         double bl = ( y - x + turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
         double fr = ( y - x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
         double br = ( y + x - turn ) * ( isSlowDrive ? Drive::SLOW_DRIVE_MULTIPLIER : 1.0 );
+
+		if( isPIDControl ){
+	
+			flPID->SetSetpoint( fl, fl );
+			blPID->SetSetpoint( bl, bl );
+			frPID->SetSetpoint( fr, fr );
+			brPID->SetSetpoint( br, br );
+		
+			fl = flPID->GetOutput();
+			bl = blPID->GetOutput();
+			fr = frPID->GetOutput();
+			br = brPID->GetOutput();
+
+			//fl = xPID->GetOutput() + yPID->GetOutput() + turnPID->GetOutput() ;
+			//bl = -xPID->GetOutput() + yPID->GetOutput() + turnPID->GetOutput() ;
+			//fr = -xPID->GetOutput() + yPID->GetOutput() - turnPID->GetOutput() ;
+			//br = xPID->GetOutput() + yPID->GetOutput() - turnPID->GetOutput() ;
+		
+		}
 
         flMotor->Set( fl * motorInverters[0] );
         blMotor->Set( bl * motorInverters[1] );
