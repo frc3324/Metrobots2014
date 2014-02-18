@@ -30,7 +30,6 @@ class Kicker {
 		static const int kickRotationMax = 10;	//dummy value3
 		
 		bool isKicking, isPullingBack, isSitting, isRetracting;
-		bool isKicking2, isRetracting2;
 };
 
 #endif

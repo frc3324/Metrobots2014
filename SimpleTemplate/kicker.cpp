@@ -56,24 +56,6 @@ void Kicker::Actuate() {
 			kicker2->Set(0);
 			t->Reset();
 		}
-	}else if (state == Kicking2) {
-		kicker1->Set(1.0);
-		kicker2->Set(1.0);
-		if (t->Get() >= 0.75) {
-			state = Retracting;
-			kicker1->Set(0);
-			kicker2->Set(0);
-			t->Reset();
-		}
-	}else if (state == Retracting2){
-		kicker1->Set(-1);
-		kicker2->Set(-1);
-		if (t->Get() >= 0.35) {
-			state = Nothing;
-			kicker1->Set(0);
-			kicker2->Set(0);
-			t->Reset();
-		}
 	}else if (state == PullUp){
 		kicker1->Set(1);
 		kicker2->Set(1);
