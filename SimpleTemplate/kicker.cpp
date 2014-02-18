@@ -56,7 +56,7 @@ void Kicker::Actuate() {
 			kicker2->Set(0);
 			t->Reset();
 		}
-	}else if (state == PullUp){
+	}else if (state == Pull){
 		kicker1->Set(1);
 		kicker2->Set(1);
 		if (encoder->Get() >= 1) {
@@ -90,7 +90,7 @@ void Kicker::KickBallN() {
 
 void Kicker::PullUp() {
 	if (state == Nothing) {
-		state = PullUp;
+		state = Pull;
 	}
 }
 

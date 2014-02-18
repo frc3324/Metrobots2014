@@ -17,7 +17,7 @@ class Kicker {
 		void PullUp();
 		Timer* t;
 		
-		enum {Nothing, PullingBack, Kicking, Sitting, Retracting, PullUp} state;
+		enum {Nothing, PullingBack, Kicking, Sitting, Retracting, Pull} state;
 		//int state; // 0 = Nothing, 1 = Pulling Back, 2 = Kicking
 		
 		SpeedController *kicker1;
