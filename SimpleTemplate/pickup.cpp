@@ -22,7 +22,7 @@ void Pickup::Disable() {
 }
 
 void Pickup::RunIntake(double wheelSpeed) {
-	motorSpeed = wheelSpeed;
+	motorSpeed = wheelSpeed * 0.85;
 }
 
 void Pickup::ArmAngle(double upMotorSpeed) {

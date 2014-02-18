@@ -386,7 +386,8 @@ SimpleTemplate_partialImage/Debug/Objects/SimpleTemplate/pickup.o:  \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIErrors.h \
   C:/WindRiver/vxworks-6.3/target/h/Math.h \
   C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/metropidcontroller.h \
-  C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h
+  C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h \
+  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/dualrelay.h
 
 C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/pickup.h:
 
@@ -1161,3 +1162,5 @@ C:/WindRiver/vxworks-6.3/target/h/Math.h:
 C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/metropidcontroller.h:
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
+
+C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/dualrelay.h:

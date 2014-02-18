@@ -30,11 +30,11 @@ class Drive {
 		void SetSlowDrive( bool value );
 		void SetInvertedMotors( bool fl, bool bl, bool fr, bool br );
 		
-		static const double PID_P = 1.0;
+		static const double PID_P = 0.75;
 		static const double PID_I = 0.0;
 		static const double PID_D = 0.1;
 		
-		static const double XYTURN_PID_P = 1.0;
+		static const double XYTURN_PID_P = 0.75;
 		static const double XYTURN_PID_I = 0.0;
 		static const double XYTURN_PID_D = 0.1;
 		

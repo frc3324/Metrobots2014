@@ -15,7 +15,7 @@ void _GLOBAL__I__ZN5DriveC2EP15SpeedControllerS1_S1_S1_P7EncoderS3_S3_S3_P4Gyro(
 
 void _GLOBAL__I__ZN6KickerC2EP15SpeedControllerS1_P12DigitalInputS3_P7Encoder();
 
-void _GLOBAL__I__ZN6PickupC2EP15SpeedControllerS1_();
+void _GLOBAL__I__ZN6PickupC2EP15SpeedControllerP9DualRelay();
 
 void _GLOBAL__I__ZN7GamePadC2Ei();
 
@@ -80,7 +80,7 @@ void (*_ctors[])() =
     _GLOBAL__I__ZN18MetroPIDControllerC2EdddNS_5ModesEbd,
     _GLOBAL__I__ZN5DriveC2EP15SpeedControllerS1_S1_S1_P7EncoderS3_S3_S3_P4Gyro,
     _GLOBAL__I__ZN6KickerC2EP15SpeedControllerS1_P12DigitalInputS3_P7Encoder,
-    _GLOBAL__I__ZN6PickupC2EP15SpeedControllerS1_,
+    _GLOBAL__I__ZN6PickupC2EP15SpeedControllerP9DualRelay,
     _GLOBAL__I__ZN7GamePadC2Ei,
     _GLOBAL__I__ZN9DualRelayC2Eii,
     _GLOBAL__I__ZN12PrintCommandC2EPKc,
@@ -120,7 +120,7 @@ void _GLOBAL__D__ZN5DriveC2EP15SpeedControllerS1_S1_S1_P7EncoderS3_S3_S3_P4Gyro(
 
 void _GLOBAL__D__ZN6KickerC2EP15SpeedControllerS1_P12DigitalInputS3_P7Encoder();
 
-void _GLOBAL__D__ZN6PickupC2EP15SpeedControllerS1_();
+void _GLOBAL__D__ZN6PickupC2EP15SpeedControllerP9DualRelay();
 
 void _GLOBAL__D__ZN7GamePadC2Ei();
 
@@ -175,7 +175,7 @@ void (*_dtors[])() =
     _GLOBAL__D__ZN18MetroPIDControllerC2EdddNS_5ModesEbd,
     _GLOBAL__D__ZN5DriveC2EP15SpeedControllerS1_S1_S1_P7EncoderS3_S3_S3_P4Gyro,
     _GLOBAL__D__ZN6KickerC2EP15SpeedControllerS1_P12DigitalInputS3_P7Encoder,
-    _GLOBAL__D__ZN6PickupC2EP15SpeedControllerS1_,
+    _GLOBAL__D__ZN6PickupC2EP15SpeedControllerP9DualRelay,
     _GLOBAL__D__ZN7GamePadC2Ei,
     _GLOBAL__D__ZN9DualRelayC2Eii,
     _GLOBAL__D__ZN9Scheduler9_instanceE,

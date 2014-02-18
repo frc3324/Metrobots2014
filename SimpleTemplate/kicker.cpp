@@ -18,6 +18,8 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInp
 				isPullingBack = false;
 				isSitting = false;
 				
+				state = Nothing;
+				
 				t = new Timer();
 				t->Start();
 

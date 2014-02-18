@@ -42,7 +42,7 @@ class CommandBasedRobot : public IterativeRobot {
 				kicker1 = new Talon( 5 );
 				kicker2 = new Talon( 6 );
 				pickupMotor = new Talon( 7 );
-				angleMotor = new DualRelay( 1, 2 );
+				angleMotor = new DualRelay( 1, 1 );
 							
                 timer = new Timer();
                 freshness = new Timer();
@@ -163,7 +163,8 @@ class CommandBasedRobot : public IterativeRobot {
         
 			virtual void TeleopInit() {
 			                
-			        drive->SetFieldOriented(true);
+			        drive->SetPIDControl(true);
+			        drive->SetFieldOriented(false);
 			                
 			}
 			
@@ -242,11 +243,11 @@ class CommandBasedRobot : public IterativeRobot {
                 
                 //pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
 
-                pickup->RunIntake( kickerGamePad->GetAxis( GamePad::RIGHT_Y ));
+                pickup->RunIntake( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
                 
-                if( kickerGamePad->GetButton( GamePad::B ) && !kickerGamePad->GetButton( GamePad::Y )) {
+                if( kickerGamePad->GetButton( GamePad::Y ) && !kickerGamePad->GetButton( GamePad::B )) {
                 	pickup->Raise();
-                }else if( kickerGamePad->GetButton( GamePad::Y ) && !kickerGamePad->GetButton( GamePad::X )) {
+                }else if( kickerGamePad->GetButton( GamePad::B ) && !kickerGamePad->GetButton( GamePad::Y )) {
                 	pickup->Lower();
                 }else{
                 	pickup->StopAngle();
@@ -318,8 +319,9 @@ class CommandBasedRobot : public IterativeRobot {
                 ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == Kick ? "Single Kick" : ( script == DoubleKick ? "DoubleKick" : ( script == Forward ? "Forward" :( script == NoScript ? "None" : "YOU BROKE IT" ) ) ) );
                 ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s%f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->GetGyroAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
-                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%f", flEncoder->Get() );
+                //ds->Printf(DriverStationLCD::kUser_Line4, 1, "%f", flEncoder->Get() );
                 ds->Printf(DriverStationLCD::kUser_Line4, 1, "%d : %d : %d : %d", flEncoder->Get(), blEncoder->Get(), frEncoder->Get(), brEncoder->Get() );
+                ds->Printf(DriverStationLCD::kUser_Line5, 1, "%f", kickerGamePad->GetButton( GamePad::TRIGGER ) );
                 ds->UpdateLCD();
                 
         }
