@@ -14,9 +14,10 @@ class Kicker {
 		void Actuate();
 		void Disable();
 		void KickBallN();
+		void PullUp();
 		Timer* t;
 		
-		enum {Nothing, PullingBack, Kicking, Sitting, Retracting} state;
+		enum {Nothing, PullingBack, Kicking, Sitting, Retracting, PullUp} state;
 		//int state; // 0 = Nothing, 1 = Pulling Back, 2 = Kicking
 		
 		SpeedController *kicker1;
@@ -29,6 +30,7 @@ class Kicker {
 		static const int kickRotationMax = 10;	//dummy value3
 		
 		bool isKicking, isPullingBack, isSitting, isRetracting;
+		bool isKicking2, isRetracting2;
 };
 
 #endif
