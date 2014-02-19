@@ -11,8 +11,12 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInp
 				
 				encoder = encoder_;
 				
+				state = Nothing;
+				
 				kicker1->Set(0.0);
 				kicker2->Set(0.0);
+				
+				encoder->Start();
 				
 				isKicking = false;
 				isPullingBack = false;
@@ -82,7 +86,7 @@ void Kicker::KickBall(){
 
 void Kicker::KickBallN() {
 	if (state == Nothing) {
-		encoder->Reset();
+		//encoder->Reset();
 		t->Reset();
 		state = Kicking;
 	}

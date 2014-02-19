@@ -18,6 +18,7 @@ class CommandBasedRobot : public IterativeRobot {
         Timer *timer, *freshness;
         
         Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor;
+        Servo *kickerHolder;
         DualRelay *angleMotor;
         DigitalInput *limitSwitchf, *limitSwitchb;
         Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder, *kickerEncoder;
@@ -319,7 +320,7 @@ class CommandBasedRobot : public IterativeRobot {
                 ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == Kick ? "Single Kick" : ( script == DoubleKick ? "DoubleKick" : ( script == Forward ? "Forward" :( script == NoScript ? "None" : "YOU BROKE IT" ) ) ) );
                 ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s%f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->GetGyroAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
-                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%f", kickerEncoder->Get() );
+                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%d", kickerEncoder->Get() );
                 ds->Printf(DriverStationLCD::kUser_Line5, 1, "%d : %d : %d : %d", flEncoder->Get(), blEncoder->Get(), frEncoder->Get(), brEncoder->Get() );
                 ds->UpdateLCD();
                 
