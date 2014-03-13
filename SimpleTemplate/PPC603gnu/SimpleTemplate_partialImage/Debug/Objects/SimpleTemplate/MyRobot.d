@@ -1,5 +1,5 @@
 SimpleTemplate_partialImage/Debug/Objects/SimpleTemplate/MyRobot.o:  \
- C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/MyRobot.cpp \
+ C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/MyRobot.cpp \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h \
   C:/WindRiver/vxworks-6.3/target/h/string.h \
   C:/WindRiver/vxworks-6.3/target/h/types/vxANSI.h \
@@ -383,14 +383,14 @@ SimpleTemplate_partialImage/Debug/Objects/SimpleTemplate/MyRobot.o:  \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/Vision/HSLImage.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/Vision/ColorImage.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIErrors.h \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/gamepad.h \
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/gamepad.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/metropidcontroller.h \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/dualrelay.h \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/drive.h \
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/metropidcontroller.h \
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/dualrelay.h \
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/drive.h \
   C:/WindRiver/vxworks-6.3/target/h/Math.h \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/kicker.h \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/pickup.h
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/kicker.h \
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/pickup.h
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
 
@@ -1158,18 +1158,18 @@ C:/WindRiver/vxworks-6.3/target/h/WPILib/Vision/ColorImage.h:
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIErrors.h:
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/gamepad.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/gamepad.h:
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/metropidcontroller.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/metropidcontroller.h:
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/dualrelay.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/dualrelay.h:
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/drive.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/drive.h:
 
 C:/WindRiver/vxworks-6.3/target/h/Math.h:
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/kicker.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/kicker.h:
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/pickup.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/pickup.h:

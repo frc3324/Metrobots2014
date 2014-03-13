@@ -9,7 +9,7 @@
 class Pickup {
 
 	public:
-		Pickup( SpeedController *motor, DualRelay *angleMotor );
+		Pickup( SpeedController *motor, DualRelay *angleMotor, DigitalInput *bottomSwitch, DigitalInput *topSwitch );
 		~Pickup(){};
 		void Actuate();
 		void RunIntake(double wheelSpeed);
@@ -19,12 +19,15 @@ class Pickup {
 		void StopAngle();
 		void Intake();
 		void Expel();
+		void StopIntake();
 		void Disable();
 		
 		enum {Pushing, Pulling, Nothing} pickupState;
+		enum {Up, Down, Stopped} angleState;
 		
 		SpeedController *motor;
 		DualRelay *angleMotor;
+		DigitalInput *bottomSwitch, *topSwitch;
 		
 		double motorSpeed;
 		Relay::Value angleMotorBool;

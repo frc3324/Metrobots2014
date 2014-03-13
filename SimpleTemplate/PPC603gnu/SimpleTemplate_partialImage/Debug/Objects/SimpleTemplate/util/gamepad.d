@@ -1,6 +1,6 @@
 SimpleTemplate_partialImage/Debug/Objects/SimpleTemplate/util/gamepad.o:  \
- C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/gamepad.cpp \
-  C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/GamePad.h \
+ C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/gamepad.cpp \
+  C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/GamePad.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h \
   C:/WindRiver/vxworks-6.3/target/h/string.h \
   C:/WindRiver/vxworks-6.3/target/h/types/vxANSI.h \
@@ -387,7 +387,7 @@ SimpleTemplate_partialImage/Debug/Objects/SimpleTemplate/util/gamepad.o:  \
   C:/WindRiver/vxworks-6.3/target/h/math.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h
 
-C:/Users/MHS-MHS/code/Metrobots2014/SimpleTemplate/util/GamePad.h:
+C:/Users/Metrobots/Desktop/Metrobots2014/SimpleTemplate/util/GamePad.h:
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
 

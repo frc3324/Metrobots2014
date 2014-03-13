@@ -20,7 +20,7 @@ class CommandBasedRobot : public IterativeRobot {
         Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor;
         Servo *kickerHolder;
         DualRelay *angleMotor;
-        DigitalInput *limitSwitchf, *limitSwitchb;
+        DigitalInput *limitSwitchb, *limitSwitcht;
         Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder, *kickerEncoder;
         Gyro *gyro;
         GamePad *driverGamePad, *kickerGamePad;
@@ -47,15 +47,17 @@ class CommandBasedRobot : public IterativeRobot {
 							
                 timer = new Timer();
                 freshness = new Timer();
-
-                limitSwitchb = new DigitalInput( 1 );
-                limitSwitchf = new DigitalInput( 2 );
                 
-                flEncoder = new Encoder( 9, 10 );
-                blEncoder = new Encoder( 11, 12 );
-                frEncoder = new Encoder( 5, 6 );
-                brEncoder = new Encoder( 7, 8 );
+                limitSwitcht = new DigitalInput( 1 );
+                limitSwitchb = new DigitalInput( 2 );
+                
+                flEncoder = new Encoder( 13, 14 );
+                blEncoder = new Encoder( 5, 6 );
+                frEncoder = new Encoder( 7, 8 );
+                brEncoder = new Encoder( 9, 10 );
                 kickerEncoder = new Encoder( 3, 4 );
+                
+                 
                 
                 gyro = new Gyro( 1 );
                 gyro->Reset();
@@ -67,8 +69,8 @@ class CommandBasedRobot : public IterativeRobot {
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
                 
-                kicker = new Kicker( kicker1, kicker2, limitSwitchb, limitSwitchf, kickerEncoder );
-                pickup = new Pickup( pickupMotor, angleMotor );
+                kicker = new Kicker( kicker1, kicker2, kickerEncoder );
+                pickup = new Pickup( pickupMotor, angleMotor, limitSwitchb, limitSwitcht );
                 
 
                 
@@ -164,7 +166,7 @@ class CommandBasedRobot : public IterativeRobot {
         
 			virtual void TeleopInit() {
 			                
-			        drive->SetPIDControl(true);
+			        drive->SetPIDControl(false);
 			        drive->SetFieldOriented(false);
 			                
 			}
@@ -235,23 +237,33 @@ class CommandBasedRobot : public IterativeRobot {
                 	kicker->KickBallN();
                 }
                 
-                if( kickerGamePad->GetButton( GamePad::X )) {
-                	flEncoder->Reset();
-                	blEncoder->Reset();
-                	frEncoder->Reset();
-                	brEncoder->Reset();
-                }
+                
                 
                 //pickup->ArmAngle( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
 
-                pickup->RunIntake( kickerGamePad->GetAxis( GamePad::LEFT_Y ));
+                //pickup->RunIntake( -kickerGamePad->GetAxis( GamePad::LEFT_Y ));
                 
-                if( kickerGamePad->GetButton( GamePad::Y ) && !kickerGamePad->GetButton( GamePad::B )) {
+                if ( kickerGamePad->GetButton( GamePad::LB )) {
+                	pickup->Intake();
+                }else if ( kickerGamePad->GetButton( GamePad::BACK )) {
+                	pickup->StopIntake();
+                }else if ( kickerGamePad->GetButton( GamePad::RB )){
+                	pickup->Expel();
+                }
+                
+                
+                if( kickerGamePad->GetButton( GamePad::Y )) {
                 	pickup->Raise();
-                }else if( kickerGamePad->GetButton( GamePad::B ) && !kickerGamePad->GetButton( GamePad::Y )) {
+                }else if( kickerGamePad->GetButton( GamePad::B )) {
                 	pickup->Lower();
-                }else{
+                }else if( kickerGamePad->GetButton( GamePad::START )){
                 	pickup->StopAngle();
+                } 
+                
+                if( kickerGamePad->GetButton( GamePad::X )) {
+                	kicker->RaiseLeg();
+                }else if ( !kickerGamePad->GetButton( GamePad::X )){
+                	kicker->StopRaise();
                 }
                 
                 Actuate();
@@ -281,12 +293,6 @@ class CommandBasedRobot : public IterativeRobot {
                 
                 drive->SetFieldOriented( driverGamePad->GetButtonDown( GamePad::START ) ? true : ( driverGamePad->GetButtonDown( GamePad::BACK ) ? false : drive->IsFieldOriented() ) );
                 
-                if( kickerGamePad->GetButton( GamePad::X )) {
-                		flEncoder->Reset();
-                		blEncoder->Reset();
-                		frEncoder->Reset();
-                		brEncoder->Reset();
-                }
 
                 PrintToDS();
                 
@@ -318,10 +324,11 @@ class CommandBasedRobot : public IterativeRobot {
                 
                 ds->Clear();
                 ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == Kick ? "Single Kick" : ( script == DoubleKick ? "DoubleKick" : ( script == Forward ? "Forward" :( script == NoScript ? "None" : "YOU BROKE IT" ) ) ) );
-                ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s%f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->GetGyroAngle() );
+                ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s %f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->gyro->GetAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
                 ds->Printf(DriverStationLCD::kUser_Line4, 1, "%d", kickerEncoder->Get() );
                 ds->Printf(DriverStationLCD::kUser_Line5, 1, "%d : %d : %d : %d", flEncoder->Get(), blEncoder->Get(), frEncoder->Get(), brEncoder->Get() );
+                ds->Printf(DriverStationLCD::kUser_Line5, 1, "%d", limitSwitcht->Get() );
                 ds->UpdateLCD();
                 
         }

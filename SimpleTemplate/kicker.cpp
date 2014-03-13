@@ -1,22 +1,19 @@
 #include "kicker.h"
 #include <Math.h>
 
-Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, DigitalInput *limitSwitchb_, DigitalInput *limitSwitchf_, Encoder *encoder_) {
+Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, Encoder *kickerEncoder_) {
 
                 kicker1 = kicker1_;
                 kicker2 = kicker2_;
 				
-				limitSwitchb = limitSwitchb_;
-				limitSwitchf = limitSwitchf_;
-				
-				encoder = encoder_;
+				kickerEncoder = kickerEncoder_;
 				
 				state = Nothing;
 				
 				kicker1->Set(0.0);
 				kicker2->Set(0.0);
 				
-				encoder->Start();
+				kickerEncoder->Start();
 				
 				isKicking = false;
 				isPullingBack = false;
@@ -43,17 +40,17 @@ void Kicker::Actuate() {
 		 state = Kicking;
 	 }
 	}else if (state == Kicking) {
-		kicker1->Set(1.0);
-		kicker2->Set(1.0);
+		kicker1->Set(-1.0);
+		kicker2->Set(-1.0);
 		if (t->Get() >= 0.75) {
-			state = Retracting;
+			state = Nothing;
 			kicker1->Set(0);
 			kicker2->Set(0);
 			t->Reset();
 		}
 	}else if (state == Retracting){
-		kicker1->Set(-1);
-		kicker2->Set(-1);
+		kicker1->Set(1);
+		kicker2->Set(1);
 		if (t->Get() >= 0.35) {
 			state = Nothing;
 			kicker1->Set(0);
@@ -63,15 +60,19 @@ void Kicker::Actuate() {
 	}else if (state == Pull){
 		kicker1->Set(1);
 		kicker2->Set(1);
-		if (encoder->Get() >= 1) {
+		if (kickerEncoder->Get() >= 1) {
 			kicker1->Set(-0.5);
 			kicker2->Set(-0.5);
-			if (encoder->Get() >= 1) {
+			if (kickerEncoder->Get() >= 1) {
 				kicker1->Set(0);
 				kicker2->Set(0);
 			}
 		}
-	}else {
+	}else if (state == Raising){
+		kicker1->Set(1);
+		kicker2->Set(1);
+	}
+	else {
 		kicker1->Set(0.0);
 		kicker2->Set(0.0);
 	}
@@ -98,7 +99,23 @@ void Kicker::PullUp() {
 	}
 }
 
+void Kicker::RaiseLeg() {
+	if (state == Nothing) {
+		state = Raising;
+	}
+}
+
+void Kicker::StopRaise() {
+	if (state == Raising) state = Nothing;
+}
+
 void Kicker::Disable() {
 	kicker1->Set(0);
 	kicker2->Set(0);
+	state = Nothing;
+}
+
+bool Kicker::State() {
+	if (state == Nothing) return false;
+	else return true;
 }

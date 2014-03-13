@@ -93,5 +93,3 @@ bool GamePad::GetDPadRightDown(){
 }
 
 
-
-
