@@ -1,19 +1,17 @@
 #include "kicker.h"
 #include <Math.h>
 
-Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, Encoder *kickerEncoder_) {
+Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, AnalogChannel *kickerPot_) {
 
                 kicker1 = kicker1_;
                 kicker2 = kicker2_;
 				
-				kickerEncoder = kickerEncoder_;
+				kickerPot = kickerPot_;
 				
 				state = Nothing;
 				
 				kicker1->Set(0.0);
 				kicker2->Set(0.0);
-				
-				kickerEncoder->Start();
 				
 				isKicking = false;
 				isPullingBack = false;
@@ -26,32 +24,25 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, Encoder *k
 	
 void Kicker::Actuate() {
 	if (state == PullingBack) {
-		kicker1->Set(-1.0);
-		kicker2->Set(-1.0);
-		if (t->Get() >= 1.25) {
+		kicker1->Set(1.0);
+		kicker2->Set(1.0);
+		if (t->Get() >= 0.4) {
 			t->Reset();
-			state = Sitting;
+			state = Kicking;
 		}
-	}else if (state == Sitting){
-	 kicker1->Set(0);
-	 kicker2->Set(0);
-	 if (t->Get() >= 0.05) {
-		 t->Reset();
-		 state = Kicking;
-	 }
 	}else if (state == Kicking) {
 		kicker1->Set(-1.0);
 		kicker2->Set(-1.0);
-		if (t->Get() >= 0.75) {
-			state = Nothing;
+		if (kickerPot->GetValue() > (kickerPotVal + 670)) {
+			state = Retracting;
 			kicker1->Set(0);
 			kicker2->Set(0);
 			t->Reset();
 		}
 	}else if (state == Retracting){
-		kicker1->Set(1);
-		kicker2->Set(1);
-		if (t->Get() >= 0.35) {
+		kicker1->Set(0.4);
+		kicker2->Set(0.4);
+		if (kickerPot->GetValue() < (kickerPotVal + 90)) {
 			state = Nothing;
 			kicker1->Set(0);
 			kicker2->Set(0);
@@ -60,10 +51,10 @@ void Kicker::Actuate() {
 	}else if (state == Pull){
 		kicker1->Set(1);
 		kicker2->Set(1);
-		if (kickerEncoder->Get() >= 1) {
+		if (kickerPot->GetValue() >= 1) {
 			kicker1->Set(-0.5);
 			kicker2->Set(-0.5);
-			if (kickerEncoder->Get() >= 1) {
+			if (kickerPot->GetValue() >= 1) {
 				kicker1->Set(0);
 				kicker2->Set(0);
 			}
@@ -71,6 +62,9 @@ void Kicker::Actuate() {
 	}else if (state == Raising){
 		kicker1->Set(1);
 		kicker2->Set(1);
+	}else if (state == Nothing && kickerPot->GetValue() > (kickerPotVal + 15)){
+		kicker1->Set(0.8);
+		kicker2->Set(0.8);
 	}
 	else {
 		kicker1->Set(0.0);
@@ -118,4 +112,8 @@ void Kicker::Disable() {
 bool Kicker::State() {
 	if (state == Nothing) return false;
 	else return true;
+}
+
+void Kicker::KickerPotVal(int x) {
+	kickerPotVal = x;
 }

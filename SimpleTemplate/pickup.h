@@ -13,16 +13,20 @@ class Pickup {
 		~Pickup(){};
 		void Actuate();
 		void RunIntake(double wheelSpeed);
-		void ArmAngle(double upMotorSpeed);
 		void Raise();
 		void Lower();
+		void ToTop();
+		void ToBottom();
 		void StopAngle();
 		void Intake();
 		void Expel();
 		void StopIntake();
 		void Disable();
+		void Kick();
+		bool AllWay();
+		bool isKicking();
 		
-		enum {Pushing, Pulling, Nothing} pickupState;
+		enum {Pushing, Pulling, Kicking, Nothing} pickupState;
 		enum {Up, Down, Stopped} angleState;
 		
 		SpeedController *motor;
@@ -31,6 +35,7 @@ class Pickup {
 		
 		double motorSpeed;
 		Relay::Value angleMotorBool;
+		bool moveAllWay;
 };
 
 #endif

@@ -8,7 +8,7 @@
 class Kicker {
 	
 	public:
-		Kicker( SpeedController *kicker1, SpeedController *kicker2, Encoder *kickerEncoder);
+		Kicker( SpeedController *kicker1, SpeedController *kicker2, AnalogChannel *kickerPot);
 		~Kicker(){};
 		void KickBall();
 		void Actuate();
@@ -18,6 +18,7 @@ class Kicker {
 		void RaiseLeg();
 		void StopRaise();
 		bool State();
+		void KickerPotVal(int x);
 		Timer* t;
 		
 		enum {Nothing, PullingBack, Kicking, Sitting, Retracting, Pull, Raising} state;
@@ -25,12 +26,13 @@ class Kicker {
 		
 		SpeedController *kicker1;
 		SpeedController *kicker2;
-		Encoder *kickerEncoder;
+		AnalogChannel *kickerPot;
 		
 		static const int kickRotationMin = 0;	//dummy value
 		static const int kickRotationMax = 10;	//dummy value3
 		
 		bool isKicking, isPullingBack, isSitting, isRetracting;
+		int kickerPotVal;
 };
 
 #endif

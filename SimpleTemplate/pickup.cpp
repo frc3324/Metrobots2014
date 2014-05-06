@@ -31,13 +31,14 @@ void Pickup::Actuate() {
 		motor->Set(0);
 	}
 	
-	if( angleState == Up && topSwitch->Get() ) {
+	if(( angleState == Up  || pickupState == Kicking ) && topSwitch->Get() ) {
 		angleMotor->Set(Relay::kReverse);
 	}else if ( angleState == Down && bottomSwitch->Get() ) {
 		angleMotor->Set(Relay::kForward);
 	}else{
 		angleMotor->Set(Relay::kOff);
 		angleState = Stopped;
+		moveAllWay = false;
 	}
 	
 	
@@ -54,18 +55,29 @@ void Pickup::RunIntake(double wheelSpeed) {
 	motorSpeed = wheelSpeed * 0.85;
 }
 
-void Pickup::ArmAngle(double upMotorSpeed) {
-	//angleMotorSpeed = upMotorSpeed;
-}
 
 void Pickup::Raise() {
 	angleMotorBool = Relay::kReverse;
 	angleState = Up;
+	moveAllWay = false;
 }
 
 void Pickup::Lower() {
 	angleMotorBool = Relay::kForward;
 	angleState = Down;
+	moveAllWay = false;
+}
+
+void Pickup::ToTop() {
+	angleMotorBool = Relay::kReverse;
+	angleState = Up;
+	moveAllWay = true;
+}
+
+void Pickup::ToBottom() {
+	angleMotorBool = Relay::kForward;
+	angleState = Down;
+	moveAllWay = true;
 }
 
 void Pickup::StopAngle() {
@@ -81,6 +93,21 @@ void Pickup::Expel() {
 	pickupState = Pushing;
 }
 
+void Pickup::Kick() {
+	pickupState = Kicking;
+	moveAllWay = true;
+}
+
 void Pickup::StopIntake() {
 	pickupState = Nothing;
+}
+
+bool Pickup::AllWay() {
+	if ( moveAllWay ) return 1;
+	else return 0;
+}
+
+bool Pickup::isKicking() {
+	if ( pickupState == Kicking ) return 1;
+	else return 0;
 }

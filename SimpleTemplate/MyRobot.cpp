@@ -15,19 +15,23 @@ class CommandBasedRobot : public IterativeRobot {
         typedef enum {Kick, DoubleKick, Forward, NoScript} AutonScript;
         AutonScript script;
         int step;
-        Timer *timer, *freshness;
+        Timer *timer, *freshness, *lightTimer;
         
         Talon *flMotor, *blMotor, *frMotor, *brMotor, *kicker1, *kicker2, *pickupMotor;
         Servo *kickerHolder;
-        DualRelay *angleMotor;
-        DigitalInput *limitSwitchb, *limitSwitcht;
+        DualRelay *angleMotor, *LED;
+        DigitalInput *limitSwitchb, *limitSwitcht, *PiInput;
+        DigitalOutput *PiAutonSignal;
         Encoder *flEncoder, *blEncoder, *frEncoder, *brEncoder, *kickerEncoder;
+        AnalogChannel *kickerPot;
         Gyro *gyro;
         GamePad *driverGamePad, *kickerGamePad;
         
         Drive *drive;
 		Kicker *kicker;
 		Pickup *pickup;
+		Kinect *kinect;
+		Skeleton *skeleton;
         
         DriverStationLCD *ds;
         //NetworkTable *table;
@@ -50,18 +54,25 @@ class CommandBasedRobot : public IterativeRobot {
                 
                 limitSwitcht = new DigitalInput( 1 );
                 limitSwitchb = new DigitalInput( 2 );
+                PiInput = new DigitalInput( 12 );
                 
                 flEncoder = new Encoder( 13, 14 );
                 blEncoder = new Encoder( 5, 6 );
                 frEncoder = new Encoder( 7, 8 );
                 brEncoder = new Encoder( 9, 10 );
-                kickerEncoder = new Encoder( 3, 4 );
+                //kickerEncoder = new Encoder( 11, 12 );
                 
-                 
+                kickerPot = new AnalogChannel(2);
                 
                 gyro = new Gyro( 1 );
                 gyro->Reset();
-
+                
+                LED = new DualRelay( 2, 2 );
+                
+                PiAutonSignal = new DigitalOutput( 11 );
+                
+                skeleton = new Skeleton();
+                
                 driverGamePad = new GamePad( 1 );
                 kickerGamePad = new GamePad( 2 );
                 
@@ -69,7 +80,7 @@ class CommandBasedRobot : public IterativeRobot {
                 drive = new Drive( flMotor, blMotor, frMotor, brMotor, flEncoder, blEncoder, frEncoder, brEncoder, gyro );
                 drive->SetInvertedMotors( false, false, true, true );
                 
-                kicker = new Kicker( kicker1, kicker2, kickerEncoder );
+                kicker = new Kicker( kicker1, kicker2, kickerPot );
                 pickup = new Pickup( pickupMotor, angleMotor, limitSwitchb, limitSwitcht );
                 
 
@@ -80,7 +91,7 @@ class CommandBasedRobot : public IterativeRobot {
                 ////net->PutNumber("angle", 0.0);
                 ////net->PutBoolean("hasAngle", 0.0);
                 
-                script = Forward;
+                script = Kick;
                 step = 0;
                 timer->Reset();
                 timer->Start();
@@ -95,6 +106,20 @@ class CommandBasedRobot : public IterativeRobot {
                 step = 0;
                 timer->Reset();
                 drive->ResetGyro();
+    			
+    			drive->SetTargetAngle( drive->GetGyroAngle() );
+    			
+    			drive->SetPIDControl(false);
+    			drive->SetFieldOriented(false);
+    						        
+    			flEncoder->Reset();
+    			blEncoder->Reset();
+    			frEncoder->Reset();
+    			brEncoder->Reset();
+    			
+    			kicker->KickerPotVal(kickerPot->GetValue());
+    			
+    			PiAutonSignal->Set(1);
         }
 
 		void AdvanceStep() {
@@ -105,18 +130,31 @@ class CommandBasedRobot : public IterativeRobot {
         virtual void AutonomousPeriodic() {
 			
 			if (script == Kick) {
-				switch (step) {
-				case 0:
-					kicker->KickBallN();
-					if (timer->Get() >= 1.5) AdvanceStep();
-					break;
-				case 1:
-					drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
-					if (timer->Get() >= 2) AdvanceStep();
-					break;
-				case 2:
-					drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
-					break;
+					switch (step) {
+					case 0:
+						if (kinect->GetSkeleton().GetWristLeft().y > kinect->GetSkeleton().GetShoulderLeft().y || kinect->GetSkeleton().GetWristRight().y > kinect->GetSkeleton().GetShoulderRight().y || timer->Get() >= 6.0) AdvanceStep();
+						break;
+					case 1:
+						drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
+						if (timer->Get() >= 0.7) AdvanceStep();
+						break;
+					/*case 0:
+						drive->SetMecanumXYTurn(0.0, 2.0/3.0, 0.0);
+						PiAutonSignal->Set(1);
+						break;*/
+					/*case 1:
+						drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
+						
+						break;*/
+					case 2:
+						drive->SetPIDControl(false);
+						drive->SetMecanumXYTurn(0.0, 0.0, 0.0);
+						kicker->KickBallN();
+						if (kicker->State()) AdvanceStep();
+						break;
+					case 3:
+						//PiAutonSignal->Set(0);
+						break;
 				}
 				//drive->SetPIDControl( true );
 			}else if (script == DoubleKick) {
@@ -166,8 +204,17 @@ class CommandBasedRobot : public IterativeRobot {
         
 			virtual void TeleopInit() {
 			                
-			        drive->SetPIDControl(false);
-			        drive->SetFieldOriented(false);
+			        /*drive->SetPIDControl(false);
+			        drive->SetFieldOriented(true);
+			        
+			        flEncoder->Reset();
+			        blEncoder->Reset();
+			        frEncoder->Reset();
+			        brEncoder->Reset();
+			        
+			        lightTimer->Start();*/
+			        
+			        //kicker->KickerPotVal(kickerPot->GetValue());
 			                
 			}
 			
@@ -185,9 +232,9 @@ class CommandBasedRobot : public IterativeRobot {
                 
                 /*
 * Slow Drive
-* LB or RB: Hold to toggle ON, Release to toggle OFF
+* LB: Hold to toggle ON, Release to toggle OFF
 */
-                drive->SetSlowDrive( driverGamePad->GetButton( GamePad::LB ) || driverGamePad->GetButton( GamePad::RB ) );
+                drive->SetSlowDrive( driverGamePad->GetButton( GamePad::LB ) );
                 
                 /*
 * Field Oriented
@@ -233,9 +280,21 @@ class CommandBasedRobot : public IterativeRobot {
                         drive->SetTargetAngle( drive->GetGyroAngle() + Drive::AIM_BIAS_INCREMENT);
                 }
                 
+                /*
+                 * Kick Ball
+                 * A: Pull back kicker and kick ball
+                 * X: Raise leg
+                 */
+                
                 if( kickerGamePad->GetButton( GamePad::A )) {
                 	kicker->KickBallN();
                 }
+                
+                /*if( kickerGamePad->GetButton( GamePad::X )) {
+                	kicker->RaiseLeg();
+                }else if ( !kickerGamePad->GetButton( GamePad::X )){
+                	kicker->StopRaise();
+                }*/
                 
                 
                 
@@ -243,28 +302,69 @@ class CommandBasedRobot : public IterativeRobot {
 
                 //pickup->RunIntake( -kickerGamePad->GetAxis( GamePad::LEFT_Y ));
                 
+                /*
+                 * Run intake
+                 * LB: Take in ball
+                 * RB: Spit out ball
+                 */
+                
                 if ( kickerGamePad->GetButton( GamePad::LB )) {
                 	pickup->Intake();
-                }else if ( kickerGamePad->GetButton( GamePad::BACK )) {
-                	pickup->StopIntake();
                 }else if ( kickerGamePad->GetButton( GamePad::RB )){
                 	pickup->Expel();
+                }else /*if ( kickerGamePad->GetButton( GamePad::START ))*/ {
+                	pickup->StopIntake();
                 }
                 
+                /*
+                 * Raise Pickup Mechanism
+                 * LEFT_Y UP: Raise arm
+                 * LEFT_Y DOWN: Lower arm
+                 * Y: Raise arm to top
+                 * B: Lower arm to bottom
+                 */
+                
+                
+                if( kickerGamePad->GetAxis( GamePad::LEFT_Y ) > 0.0 ) {
+                	pickup->Raise();
+                }else if( kickerGamePad->GetAxis( GamePad::LEFT_Y ) < 0.0 ) {
+                	pickup->Lower();
+                }else if( kickerGamePad->GetAxis( GamePad::LEFT_Y ) == 0.0 && !pickup->AllWay()){
+                	pickup->StopAngle();
+                }
                 
                 if( kickerGamePad->GetButton( GamePad::Y )) {
-                	pickup->Raise();
-                }else if( kickerGamePad->GetButton( GamePad::B )) {
-                	pickup->Lower();
-                }else if( kickerGamePad->GetButton( GamePad::START )){
-                	pickup->StopAngle();
-                } 
-                
-                if( kickerGamePad->GetButton( GamePad::X )) {
-                	kicker->RaiseLeg();
-                }else if ( !kickerGamePad->GetButton( GamePad::X )){
-                	kicker->StopRaise();
+                   	pickup->ToTop();
                 }
+                if( kickerGamePad->GetButton( GamePad::B )) {
+                   	pickup->ToBottom();
+                }
+                
+                if( kickerGamePad->GetButton( GamePad::RIGHT_JS )) {
+                	pickup->Kick();
+                }
+                
+                if( pickup->isKicking() && !limitSwitcht->Get()) {
+                	kicker->KickBallN();
+                }
+                
+                if( kickerGamePad->GetButton( GamePad::RIGHT_JS ) || driverGamePad->GetButton( GamePad::RB )) {
+                	if (lightTimer->Get() >= 0.25) {
+                		LED->Set(Relay::kOff);
+                		lightTimer->Reset();
+                	}else{
+                		LED->Set(Relay::kForward);
+                	}
+                }else if(kicker->State()){
+                	LED->Set(Relay::kOff);
+                }else{
+                	LED->Set(Relay::kForward);
+                }
+                
+                if( kickerGamePad->GetButton( GamePad::X )) kicker->KickerPotVal(kickerPot->GetValue());
+                
+                if( kickerGamePad->GetAxis( GamePad::DPAD_X ) != 0) PiAutonSignal->Set(1);
+                else PiAutonSignal->Set(0);
                 
                 Actuate();
                 PrintToDS();
@@ -293,6 +393,8 @@ class CommandBasedRobot : public IterativeRobot {
                 
                 drive->SetFieldOriented( driverGamePad->GetButtonDown( GamePad::START ) ? true : ( driverGamePad->GetButtonDown( GamePad::BACK ) ? false : drive->IsFieldOriented() ) );
                 
+                if( kickerGamePad->GetButton( GamePad::X )) kicker->KickerPotVal(kickerPot->GetValue());
+                
 
                 PrintToDS();
                 
@@ -316,7 +418,7 @@ class CommandBasedRobot : public IterativeRobot {
 
                 driverGamePad->Update();
                 kickerGamePad->Update();
-                IsFreshTarget();
+                //IsFreshTarget();
                 
         }
         
@@ -326,9 +428,10 @@ class CommandBasedRobot : public IterativeRobot {
                 ds->Printf(DriverStationLCD::kUser_Line1, 1, "Auto: %s", script == Kick ? "Single Kick" : ( script == DoubleKick ? "DoubleKick" : ( script == Forward ? "Forward" :( script == NoScript ? "None" : "YOU BROKE IT" ) ) ) );
                 ds->Printf(DriverStationLCD::kUser_Line2, 1, "Dr: %s%s %f", drive->IsPIDControl() ? "PID, " : "", drive->IsFieldOriented() ? "FO, " : "", drive->gyro->GetAngle() );
                 ds->Printf(DriverStationLCD::kUser_Line3, 1, "Vi: %s, Fresh: %f", HasTarget() ? "Y" : "N", freshness->Get() );
-                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%d", kickerEncoder->Get() );
+                ds->Printf(DriverStationLCD::kUser_Line4, 1, "%d", kickerPot->GetValue() );
                 ds->Printf(DriverStationLCD::kUser_Line5, 1, "%d : %d : %d : %d", flEncoder->Get(), blEncoder->Get(), frEncoder->Get(), brEncoder->Get() );
-                ds->Printf(DriverStationLCD::kUser_Line5, 1, "%d", limitSwitcht->Get() );
+                //ds->Printf(DriverStationLCD::kUser_Line6, 1, "%d, %d, %f", PiInput->Get(), step, timer->Get() );
+                ds->Printf(DriverStationLCD::kUser_Line6, 1, "%f", ((kinect->GetSkeleton().GetWristLeft().y - kinect->GetSkeleton().GetShoulderLeft().y)) );
                 ds->UpdateLCD();
                 
         }
