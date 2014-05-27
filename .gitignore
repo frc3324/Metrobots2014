@@ -1,3 +1,5 @@
 PPC603GNU/*
 PPC603gnu
 .metadata
+.DS_Store
+*.swp
