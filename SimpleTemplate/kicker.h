@@ -19,6 +19,7 @@ class Kicker {
 		void StopRaise();
 		bool State();
 		void KickerPotVal(int x);
+		int GetAdjustedPotValue();
 		Timer* t;
 		
 		enum {Nothing, PullingBack, Kicking, Sitting, Retracting, Pull, Raising} state;

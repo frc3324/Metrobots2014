@@ -118,3 +118,7 @@ bool Kicker::State() {
 void Kicker::KickerPotVal(int x) {
 	kickerPotVal = x;
 }
+
+int Kicker::GetAdjustedPotValue() {
+	return kickerPot->GetValue() - kickerPotVal;
+}
