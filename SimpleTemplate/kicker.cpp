@@ -6,6 +6,7 @@ Kicker::Kicker( SpeedController *kicker1_, SpeedController *kicker2_, AnalogChan
                 kicker1 = kicker1_;
                 kicker2 = kicker2_;
 				
+                //TODO: add GetAdjustedPotValue()
 				kickerPot = kickerPot_;
 				
 				state = Nothing;
